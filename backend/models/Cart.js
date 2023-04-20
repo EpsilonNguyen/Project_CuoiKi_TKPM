@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CartSchema = new mongoose.Schema ({
+const CartSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
@@ -28,12 +28,12 @@ const CartSchema = new mongoose.Schema ({
     paymentMethod: {
         type: String,
         require: true,
-        default: paypal
+        default: "paypal"
     },
     paymentResult: {
-        id: { type: String},
-        status: { type: String},
-        update_time: { type: String}
+        id: { type: String },
+        status: { type: String },
+        update_time: { type: String }
     },
     toal: {
         type: Number,
@@ -43,7 +43,7 @@ const CartSchema = new mongoose.Schema ({
     isPaid: {
         type: Boolean,
         required: true,
-        defualt: false
+        default: false
     },
     paidAt: {
         type: Date
@@ -51,12 +51,13 @@ const CartSchema = new mongoose.Schema ({
     isDelivered: {
         type: Boolean,
         required: true,
-        defualt: false
+        default: false
     },
     deliveredAt: {
         type: Date
-    }},
-    {timestamps: true}
+    }
+},
+    { timestamps: true }
 )
 
 export default mongoose.model("Cart", CartSchema)

@@ -2,6 +2,19 @@ import { createError } from "../utils/error.js";
 import Shoe from "../models/Shoe.js";
 import Review from "../models/Review.js";
 
+export const getAllReviewByShoeID = async (req, res, next) => {
+    try {
+        const shoeID = req.params.shoeID;
+        const shoeInfo = await Shoe.findById(shoeID);
+
+        const listReview = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
+
+        res.status(200).send(listReview);
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const updateReview = async (req, res, next) => {
     try {
         const reviewID = req.params.id;
@@ -12,12 +25,17 @@ export const updateReview = async (req, res, next) => {
             { new: true });
 
         try {
-            // UPDATE Rating trong Review ở Shoe
+            const shoeInfo = await Shoe.findById(shoeID);
+
+            const listReviews = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
+            const newTotal = listReviews.reduce((acc, cur) => acc + cur.rating, 0);
+
+            const newRating = newTotal / shoeInfo.numRev;
+
+            // UPDATE Total Rating trong Shoe
             const updateShoe = await Shoe.findOneAndUpdate(
-                { "reviews.id": reviewID },
-                {
-                    $set: { "reviews.$.rating": updateReview.rating }
-                },
+                shoeID,
+                { $set: { rating: newRating } },
                 { new: true }
             )
         } catch (err) {

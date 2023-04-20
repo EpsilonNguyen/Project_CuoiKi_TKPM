@@ -1,5 +1,5 @@
 import express from "express";
-import { createReview, deleteReview } from "../controllers/reviewController.js";
+import { createReview, deleteReview, getAllReviewByShoeID, updateReview } from "../controllers/reviewController.js";
 
 const router = express.Router();
 
@@ -7,9 +7,12 @@ const router = express.Router();
 router.post("/new/:shoeID", createReview);
 
 // UPDATE
-router.put("/update/:shoeID/:id",);
+router.put("/update/:shoeID/:id", updateReview);
 
 // DETELE
 router.delete("/delete/:shoeID/:id", deleteReview);
+
+// GET ALL REVIEW BY SHOE ID
+router.get("/getAll/:shoeID", getAllReviewByShoeID);
 
 export default router
