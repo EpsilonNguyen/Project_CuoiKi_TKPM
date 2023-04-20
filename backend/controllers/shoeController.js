@@ -1,5 +1,6 @@
 import { createError } from "../utils/error.js";
 import Shoe from "../models/Shoe.js";
+import Review from "../models/Review.js";
 
 export const getShoeByBrand = async (req, res, next) => {
     try {
@@ -7,7 +8,7 @@ export const getShoeByBrand = async (req, res, next) => {
         const listShoeBrand = await Shoe.find({
             brand: shoeBrand
         });
-        
+
         if (listShoeBrand.length > 0) {
             res.status(200).send(listShoeBrand);
         } else {
@@ -40,6 +41,10 @@ export const getAllShoe = async (req, res, next) => {
 export const deleteShoe = async (req, res, next) => {
     try {
         const shoeID = req.params.id;
+
+        const shoeInfo = await Shoe.findById(shoeID);
+        await Promise.all(shoeInfo.reviews.map((review) => Review.findByIdAndDelete(review)));
+
         await Shoe.findByIdAndDelete(shoeID);
 
         res.status(200).send("Giày đã được xóa thành công!");
