@@ -1,6 +1,7 @@
 import { createError } from "../utils/error.js";
 import Shoe from "../models/Shoe.js";
 import Review from "../models/Review.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const getShoeByBrand = async (req, res, next) => {
     try {
@@ -38,11 +39,37 @@ export const getAllShoe = async (req, res, next) => {
     }
 }
 
+export const deleteImagesInShoe = async (req, res, next) => {
+    try {
+        const shoeID = req.params.id;
+        // Code để lấy public_id phục vụ cho delete image trên cloudinary
+        const public_id = req.body.path.split('/').slice(-2).join('/').replace('.jpg', '');
+
+        const result = await cloudinary.uploader.destroy(public_id);
+
+        if (result.result !== "ok") return next(createError(404, "Xóa Hình ảnh thất bại!"));
+        await Shoe.findByIdAndUpdate(
+            shoeID,
+            { $pull: { images: req.body.path } }
+        );
+        res.status(200).send("Xoá Hình ảnh thành công!");
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const deleteShoe = async (req, res, next) => {
     try {
         const shoeID = req.params.id;
 
         const shoeInfo = await Shoe.findById(shoeID);
+
+        // Code để lấy public_id phục vụ cho delete image trên cloudinary
+        const publics_id = shoeInfo.images.map((path) => path.split('/').slice(-2).join('/').replace('.jpg', ''));
+        const result = await cloudinary.api.delete_resources(publics_id);
+
+        if (Object.values(result.deleted)[0] === "not_found") return next(createError(404, "Xóa Hình ảnh thất bại!"));
+
         await Promise.all(shoeInfo.reviews.map((review) => Review.findByIdAndDelete(review)));
 
         await Shoe.findByIdAndDelete(shoeID);
@@ -56,6 +83,8 @@ export const deleteShoe = async (req, res, next) => {
 export const updateShoe = async (req, res, next) => {
     try {
         const shoeID = req.params.id;
+
+        req.body.images = req.files.map((file) => file.path);
         const saveShoe = await Shoe.findByIdAndUpdate(
             shoeID,
             { $set: req.body },
@@ -69,7 +98,11 @@ export const updateShoe = async (req, res, next) => {
 
 export const createShoe = async (req, res, next) => {
     try {
+        // Lấy link ảnh từ Cloudinary (đã upload trc đó)
+        console.log(req.files);
+        req.body.images = req.files.map((file) => file.path);
         const newShoe = new Shoe(req.body);
+
         const saveShoe = await newShoe.save();
 
         res.status(200).json(saveShoe);

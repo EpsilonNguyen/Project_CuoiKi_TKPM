@@ -1,5 +1,5 @@
 import express from "express";
-import { createCart, deleteCart, getCartByID, updateCart } from "../controllers/cartController.js";
+import { createCart, deleteCart, addShoeItemInCart, deleteShoeItemInCart, getCartByID, updateCart } from "../controllers/cartController.js";
 
 const router = express.Router();
 
@@ -8,6 +8,12 @@ router.post("/new", createCart);
 
 // UPDATE
 router.put("/update/:id", updateCart);
+
+// UPDATE CART - ADD SHOE ITEM
+router.put("/update/add/:id", addShoeItemInCart);
+
+// UPDATE CART - DELETE SHOE ITEM
+router.put("/update/delete/:id/:shoeID", deleteShoeItemInCart);
 
 // DELETE 
 router.delete("/delete/:id", deleteCart);
