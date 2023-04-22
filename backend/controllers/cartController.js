@@ -2,6 +2,61 @@ import { createError } from "../utils/error.js";
 import Cart from "../models/Cart.js";
 import User from "../models/User.js";
 
+export const addShoeItemInCart = async (req, res, next) => {
+    try {
+        const cartID = req.params.id;
+        const cartExist = await Cart.findById(cartID);
+        if (!cartExist) return next(createError(404, "Giỏ hàng không tồn tại!"));
+        const shoeExist = await Cart.findOne(
+            {
+                _id: cartID,
+                shoeItem: { $elemMatch: { id: req.body.id } }
+            }
+        );
+        let addItem = null;
+        if (shoeExist) {
+            addItem = await Cart.findOneAndUpdate(
+                { _id: cartID, shoeItem: { $elemMatch: { id: req.body.id } } },
+                { $set: { "shoeItem.$": req.body } },
+                { new: true }
+            );
+        } else {
+            addItem = await Cart.findByIdAndUpdate(
+                cartID,
+                { $push: { shoeItem: req.body } },
+                { new: true }
+            );
+        }
+
+        if (!addItem) return next(createError(404, "Thêm Giày vào Giỏ hàng thất bại!"));
+
+        res.status(200).send("Thêm Giày vào Giỏ hàng thành công!");
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const deleteShoeItemInCart = async (req, res, next) => {
+    try {
+        const cartID = req.params.id;
+        const shoeID = req.params.shoeID;
+        const cartExist = await Cart.findById(cartID);
+        if (!cartExist) return next(createError(404, "Giỏ hàng không tồn tại!"));
+
+        const deleteItem = await Cart.findByIdAndUpdate(
+            cartID,
+            { $pull: { shoeItem: { id: shoeID } } },
+            { new: true }
+        );
+
+        if (!deleteItem) return next(createError(404, "Giày muốn xóa, không tồn tại trong Giỏ hàng!"));
+
+        res.status(200).send("Xóa Giày ra khỏi Giỏ hàng thành công!");
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const getCartByID = async (req, res, next) => {
     try {
         const cartID = req.params.id;
