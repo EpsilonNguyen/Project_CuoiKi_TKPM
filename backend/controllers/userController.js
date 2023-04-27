@@ -1,12 +1,66 @@
 import { createError } from "../utils/error.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import cloudinary from "../utils/cloudinary.js";
+import Review from "../models/Review.js";
+import Shoe from "../models/Shoe.js";
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const userInfo = await User.findById(req.params.id);
+
+        // Xóa Avatar trên Cloud
+        if (userInfo.avatar !== "../public/images/avatardefault.jpg") {
+            const publics_id = deleteUser.avatar.split('/').slice(-2).join('/').replace('.jpg', '');
+            const result = await cloudinary.uploader.destroy(publics_id);
+            if (result !== "ok") return next(createError(404, "Xóa Hình ảnh trên Cloud thất bại!"));
+        }
+
+        // Xoá All Review của User
+        const listReviews = await Review.find({ user: req.params.id });
+        await Review.deleteMany({ user: req.params.id });
+        await Promise.all(listReviews.map((review) =>
+            Shoe.updateMany(
+                { reviews: { $elemMatch: { $eq: review._id } } },
+                { $pull: { reviews: review._id } }
+            ))
+        );
+
+        const deleteUser = await User.findByIdAndDelete(req.params.id);
+        if (!deleteUser) return next(createError(404, "Người dùng không tồn tại!"));
+
+        res.status(200).send({
+            success: true,
+            message: "Xóa Người dùng thành công!"
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const uploadAvatar = async (req, res, next) => {
+    try {
+        const pathAvatar = req.file.path;
+        const updateUser = await User.findByIdAndUpdate(
+            req.params.id,
+            { avatar: pathAvatar },
+            { new: true }
+        );
+
+        res.status(200).send({
+            success: true,
+            data: updateUser
+        });
+    } catch (err) {
+        next(err);
+    }
+}
 
 export const updateUser = async (req, res, next) => {
     try {
         const updateInfo = req.body;
         const salt = bcrypt.genSaltSync(10);
-        updateInfo.password  = bcrypt.hashSync(req.body.password, salt);
+        updateInfo.password = bcrypt.hashSync(req.body.password, salt);
 
         const updateUser = await User.findByIdAndUpdate(
             req.params.id,

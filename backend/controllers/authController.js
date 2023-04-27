@@ -8,7 +8,7 @@ export const register = async (req, res, next) => {
     try {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
-        
+
         const newUser = new User({
             username: req.body.username,
             email: req.body.email,
@@ -19,7 +19,11 @@ export const register = async (req, res, next) => {
         })
 
         await newUser.save();
-        res.status(200).send("Đăng Ký User Mới Thành Công!");
+        res.status(200).send({
+            success: true,
+            message: "Đăng Ký User Mới Thành Công!",
+            data: newUser
+        });
     } catch (err) {
         next(err);
     }
@@ -33,14 +37,14 @@ export const login = async (req, res, next) => {
         const isLocking = resultUser.isLocked;
         if (isLocking) return next(createError(404, "Tài khoản của bạn đã bị khóa vì một số vấn đề!"));
 
-        const isCorrectPassword = bcrypt.compareSync(req.body.password, resultUser.password); 
+        const isCorrectPassword = bcrypt.compareSync(req.body.password, resultUser.password);
         if (!isCorrectPassword) return next(createError(404, "Mật khẩu không chính xác!"));
 
         const token = jwt.sign({ id: resultUser._id, isAdmin: resultUser.isAdmin }, process.env.JWT);
 
         const { password, isAdmin, isLocked, ...otherDetails } = resultUser._doc;
         const birthDayFormat = moment(resultUser.birthDay).format('DD-MM-YYYY');
-        
+
         res.cookie("access_token", token, {
             httpOnly: true
         }).status(200).send({ birthDayFormat, ...otherDetails });

@@ -2,6 +2,7 @@ import { createError } from "../utils/error.js";
 import Shoe from "../models/Shoe.js";
 import Review from "../models/Review.js";
 import cloudinary from "../utils/cloudinary.js";
+import Cart from "../models/Cart.js";
 
 export const getShoeByBrand = async (req, res, next) => {
     try {
@@ -24,7 +25,26 @@ export const getShoeByID = async (req, res, next) => {
     try {
         const shoeID = req.params.id;
         const shoeInfo = await Shoe.findById(shoeID);
-        res.status(200).send(shoeInfo);
+
+        // TÍNH TỔNG RATING CỦA 1 SHOE
+        const listReviews = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
+        const totalRating = listReviews.reduce((total, review) => total + review.rating, 0);
+        const totalReview = listReviews.length;
+        const averageRating = (totalRating / totalReview).toFixed(2);
+
+        // GÁN GIÁ TRỊ RATING VS TOTAL VÀO THÔNG TIN CỦA SHOE
+        const saveShoe = await Shoe.findByIdAndUpdate(
+            shoeID,
+            {
+                $set: {
+                    rating: averageRating || 0,
+                    numRev: totalReview || 0
+                }
+            },
+            { new: true }
+        );
+
+        res.status(200).send(saveShoe);
     } catch (err) {
         next(err);
     }
@@ -44,7 +64,6 @@ export const deleteImagesInShoe = async (req, res, next) => {
         const shoeID = req.params.id;
         // Code để lấy public_id phục vụ cho delete image trên cloudinary
         const public_id = req.body.path.split('/').slice(-2).join('/').replace('.jpg', '');
-
         const result = await cloudinary.uploader.destroy(public_id);
 
         if (result.result !== "ok") return next(createError(404, "Xóa Hình ảnh thất bại!"));
@@ -61,7 +80,6 @@ export const deleteImagesInShoe = async (req, res, next) => {
 export const deleteShoe = async (req, res, next) => {
     try {
         const shoeID = req.params.id;
-
         const shoeInfo = await Shoe.findById(shoeID);
 
         // Code để lấy public_id phục vụ cho delete image trên cloudinary
@@ -72,7 +90,14 @@ export const deleteShoe = async (req, res, next) => {
 
         await Promise.all(shoeInfo.reviews.map((review) => Review.findByIdAndDelete(review)));
 
-        await Shoe.findByIdAndDelete(shoeID);
+        // CODE XÓA SHOE TRONG CART
+        await Cart.updateMany(
+            { shoeItem: { $elemMatch: { id: shoeID } } },
+            { $pull: { shoeItem: { id: shoeID } } }
+        )
+
+        const deleteShoe = await Shoe.findByIdAndDelete(shoeID);
+        if (!deleteShoe) return next(createError(404, "Giày cần xóa không tồn tại!"));
 
         res.status(200).send("Giày đã được xóa thành công!");
     } catch (err) {
@@ -99,7 +124,7 @@ export const updateShoe = async (req, res, next) => {
 export const createShoe = async (req, res, next) => {
     try {
         // Lấy link ảnh từ Cloudinary (đã upload trc đó)
-        console.log(req.files);
+        // console.log(req.files);
         req.body.images = req.files.map((file) => file.path);
         const newShoe = new Shoe(req.body);
 
