@@ -18,29 +18,11 @@ export const getAllReviewByShoeID = async (req, res, next) => {
 export const updateReview = async (req, res, next) => {
     try {
         const reviewID = req.params.id;
-        const shoeID = req.params.shoeID;
         const updateReview = await Review.findByIdAndUpdate(
             reviewID,
             { $set: req.body },
-            { new: true });
-
-        try {
-            const shoeInfo = await Shoe.findById(shoeID);
-
-            const listReviews = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
-            const newTotal = listReviews.reduce((acc, cur) => acc + cur.rating, 0);
-
-            const newRating = newTotal / shoeInfo.numRev;
-
-            // UPDATE Total Rating trong Shoe
-            const updateShoe = await Shoe.findOneAndUpdate(
-                shoeID,
-                { $set: { rating: newRating } },
-                { new: true }
-            )
-        } catch (err) {
-            next(err);
-        }
+            { new: true }
+        );
 
         res.status(200).send(updateReview);
     } catch (err) {
@@ -52,58 +34,13 @@ export const deleteReview = async (req, res, next) => {
     try {
         const reviewID = req.params.id;
         const shoeID = req.params.shoeID;
-        const reviewDelete = await Review.findById(reviewID);
-        try {
-            const shoeInfo = await Shoe.findById(shoeID);
-            const shoeNumRev = shoeInfo.numRev - 1;
-            if (!shoeNumRev) {
-                await Shoe.findByIdAndUpdate(
-                    shoeID,
-                    {
-                        $pull: { reviews: reviewID },
-                        rating: 0,
-                        numRev: 0
-                    }
-                )
-            } else {
-                const listReviews = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
-                const totalRating = listReviews.reduce((acc, cur) => acc + cur.rating, 0);
-                const shoeRating = (totalRating - reviewDelete.rating) / shoeNumRev;
+        const deleteReview = await Review.findByIdAndDelete(reviewID);
+        if (!deleteReview) return next(createError(404, "Review muốn xóa không tồn tại!"));
 
-                await Shoe.findByIdAndUpdate(
-                    shoeID,
-                    {
-                        $pull: { reviews: reviewID },
-                        rating: shoeRating.toFixed(2),
-                        numRev: shoeNumRev
-                    }
-                )
-            }
-            await Review.findByIdAndDelete(reviewID);
-
-        } catch (err) {
-            next(err);
-        }
-        // try {
-        //     const shoeInfo = await Shoe.findById(shoeID);
-        //     const shoeNumRev = shoeInfo.numRev - 1;
-        //     const totalRating = shoeInfo.reviews.reduce((acc, cur) => {
-        //         return acc + cur.rating
-        //     }, 0);
-
-        //     const shoeRating = (totalRating - reviewDelete.rating) / shoeNumRev;
-
-        //     await Shoe.findByIdAndUpdate(
-        //         shoeID,
-        //         {
-        //             $pull: { reviews: { id: reviewID } },
-        //             rating: shoeRating.toFixed(2),
-        //             numRev: shoeNumRev
-        //         }
-        //     )
-        // } catch (err) {
-        //     next(err);
-        // }
+        await Shoe.findByIdAndUpdate(
+            shoeID,
+            { $pull: { reviews: reviewID } }
+        )
 
         res.status(200).send("Xóa Nhận xét thành công!");
     } catch (err) {
@@ -117,46 +54,10 @@ export const createReview = async (req, res, next) => {
         const newReview = new Review(req.body);
         const saveReview = await newReview.save();
 
-        try {
-            const shoeInfo = await Shoe.findById(shoeID);
-
-            const listReviews = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
-            const totalRating = listReviews.reduce((acc, cur) => acc + cur.rating, 0);
-
-            const shoeNumRev = shoeInfo.numRev + 1;
-            const shoeRating = (totalRating + saveReview.rating) / shoeNumRev;
-
-            await Shoe.findByIdAndUpdate(
-                shoeID,
-                {
-                    $push: { reviews: saveReview._id },
-                    rating: shoeRating.toFixed(2),
-                    numRev: shoeNumRev
-                }
-            )
-        } catch (err) {
-            next(err);
-        }
-        // try {
-        //     const shoeInfo = await Shoe.findById(shoeID);
-        //     const shoeNumRev = shoeInfo.numRev + 1;
-        //     const totalRating = shoeInfo.reviews.reduce((acc, cur) => {
-        //         return acc + cur.rating
-        //     }, 0);
-
-        //     const shoeRating = (totalRating + saveReview.rating) / shoeNumRev;
-
-        //     await Shoe.findByIdAndUpdate(
-        //         shoeID,
-        //         {
-        //             $push: { reviews: { id: saveReview._id, rating: saveReview.rating } },
-        //             rating: shoeRating.toFixed(2),
-        //             numRev: shoeNumRev
-        //         }
-        //     )
-        // } catch (err) {
-        //     next(err);
-        // }
+        await Shoe.findByIdAndUpdate(
+            shoeID,
+            { $push: { reviews: saveReview._id } }
+        )
 
         res.status(200).send(saveReview);
     } catch (err) {
