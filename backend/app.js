@@ -6,10 +6,20 @@ import userRoute from "./routes/userRoute.js";
 import shoeRoute from "./routes/shoeRoute.js";
 import reviewRoute from "./routes/reviewRoute.js";
 import cartRoute from "./routes/cartRoute.js";
+import paymentRoute from "./routes/paymentRoute.js";
+import checkoutRoute from "./routes/checkoutRoute.js";
 import cookieParser from "cookie-parser";
+import session from "express-session";
 
 const app = express();
 dotenv.config();
+
+// SESSION
+app.use(session({
+    secret: 'my-secret',
+    resave: false,
+    saveUninitialized: true
+}));
 
 const connect = async () => {
     try {
@@ -33,17 +43,19 @@ app.use("/shoeshop/api/user", userRoute);
 app.use("/shoeshop/api/shoe", shoeRoute);
 app.use("/shoeshop/api/review", reviewRoute);
 app.use("/shoeshop/api/cart", cartRoute);
+app.use("/shoeshop/api/payment", paymentRoute);
+app.use("/shoeshop/api/checkout", checkoutRoute);
 
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500;
     const errorMessage = err.message || "Đang có một số lỗi xảy ra!";
     return res.status(errorStatus).json({
-      success: false,
-      status: errorStatus,
-      message: errorMessage,
-      stack: err.stack,
+        success: false,
+        status: errorStatus,
+        message: errorMessage,
+        stack: err.stack,
     });
-  });
+});
 
 app.listen(8800, () => {
     connect();

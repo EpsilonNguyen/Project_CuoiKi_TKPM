@@ -1,6 +1,7 @@
 import { createError } from "../utils/error.js";
 import Shoe from "../models/Shoe.js";
 import Review from "../models/Review.js";
+import Checkout from "../models/Checkout.js";
 
 export const getAllReviewByShoeID = async (req, res, next) => {
     try {
@@ -51,6 +52,18 @@ export const deleteReview = async (req, res, next) => {
 export const createReview = async (req, res, next) => {
     try {
         const shoeID = req.params.shoeID;
+        const checkoutByUser = await Checkout.find(
+            {
+                user: req.body.user,
+                shoeItem: { $elemMatch: { id: shoeID } }
+            }
+        );
+
+        if (!checkoutByUser.length) return res.status(422).send({
+            success: false,
+            message: "Người dùng chưa mua sản phẩm này. Nên không được đánh giá sản phẩm!"
+        })
+
         const newReview = new Review(req.body);
         const saveReview = await newReview.save();
 

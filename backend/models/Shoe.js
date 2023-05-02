@@ -23,6 +23,10 @@ const ShoeSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
+    sold: {
+        type: Number,
+        default: 0
+    },
     brand: {
         type: String,
         enum: ["Adidas", "Nike", "Vans", "Balenciaga", "Converse", "Puma"],

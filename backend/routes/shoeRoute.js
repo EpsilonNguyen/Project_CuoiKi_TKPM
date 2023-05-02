@@ -1,5 +1,5 @@
 import express from "express";
-import { createShoe, deleteImagesInShoe, deleteShoe, getAllShoe, getShoeByBrand, getShoeByID, updateShoe } from "../controllers/shoeController.js";
+import { countShoeByBrand, createShoe, deleteImagesInShoe, deleteShoe, getAllShoe, getShoeByBrand, getShoeByID, getShoeByPrice, searchShoe, updateShoe } from "../controllers/shoeController.js";
 import uploadCloud from "../utils/multerMiddleware.js";
 
 const router = express.Router();
@@ -17,11 +17,22 @@ router.delete("/delete/:id", deleteShoe);
 router.delete("/delete/images/:id", deleteImagesInShoe);
 
 // GET
-router.get("/all", getAllShoe);
-
 router.get("/:id", getShoeByID);
 
+router.get("/all", getAllShoe);
+
+// GET SHOE BY BRAND NAME
 router.get("/brand/:brand", getShoeByBrand);
+
+// COUNT SHOE BY BRAND NAME
+router.get("/brand/:brand/total", countShoeByBrand);
+
+// GET SHOE BY PRICE : MAX - MIN
+router.get("/get/price", getShoeByPrice);
+
+// SEARCH SHOE BY QUERRY
+router.get("/all/search", searchShoe);
+
 
 // TEST UPLOAD IMAGE
 router.post("/test/upload", uploadCloud.array("images"), (req, res, next) => {

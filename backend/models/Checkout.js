@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-const CartSchema = new mongoose.Schema({
+const CheckoutSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,
-        unique: true,
         ref: "User"
     },
     shoeItem: [
@@ -26,13 +25,29 @@ const CartSchema = new mongoose.Schema({
         city: { type: String, require: true },
         province: { type: String, require: true },
     },
-    toal: {
+    total: {
         type: Number,
         required: true,
         default: 0.0
+    },
+    isPaid: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    paidAt: {
+        type: Date
+    },
+    isDelivered: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    deliveredAt: {
+        type: Date
     }
 },
     { timestamps: true }
 )
 
-export default mongoose.model("Cart", CartSchema)
+export default mongoose.model("Checkout", CheckoutSchema)

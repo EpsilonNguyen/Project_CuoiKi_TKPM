@@ -10,7 +10,7 @@ router.post("/new", createCart);
 router.put("/update/:id", updateCart);
 
 // UPDATE CART - ADD SHOE ITEM
-router.put("/update/add/:id", addShoeItemInCart);
+router.put("/update/add/:userID", addShoeItemInCart);
 
 // UPDATE CART - DELETE SHOE ITEM
 router.put("/update/delete/:id/:shoeID", deleteShoeItemInCart);

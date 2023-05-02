@@ -1,19 +1,6 @@
 import mongoose from "mongoose";
-// import fs from "fs";
-// import path from "path";
-// import { fileURLToPath } from 'url';
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-
-// const avatar_default = fs.readFileSync(path.join(__dirname,'../public/images/avatardefault.jpg'));
-
-const UserScheme = new mongoose.Schema ({
-    username: {
-        type: String,
-        require: true,
-        unique: true
-    },
+const UserScheme = new mongoose.Schema({
     email: {
         type: String,
         require: true,
@@ -38,21 +25,22 @@ const UserScheme = new mongoose.Schema ({
     },
     avatar: {
         type: String,
-        default: "../public/images/avatardefault.jpg"
+        default: "https://res.cloudinary.com/dtfei3453/image/upload/v1683022384/uploads/avatar_k0ohjl.webp"
     },
     wallet: {
         type: Number,
-        default: 0
+        default: 0.00
     },
     isAdmin: {
         type: Boolean,
-  default: false
+        default: false
     },
     isLocked: {
         type: Boolean,
         default: false
-    }}, 
-    {timestamps: true}
+    }
+},
+    { timestamps: true }
 )
 
 export default mongoose.model("User", UserScheme)
