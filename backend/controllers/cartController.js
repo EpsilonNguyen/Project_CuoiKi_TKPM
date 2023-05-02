@@ -4,27 +4,29 @@ import User from "../models/User.js";
 
 export const addShoeItemInCart = async (req, res, next) => {
     try {
-        const cartID = req.params.id;
+        const userID = req.params.userID;
         const shoeID = req.body.id;
-        const cartExist = await Cart.findById(cartID);
+        // CHECK CART
+        const cartExist = await Cart.findOne({ user: userID });
         if (!cartExist) return next(createError(404, "Giỏ hàng không tồn tại!"));
 
         const shoeExist = await Cart.findOne(
             {
-                _id: cartID,
+                _id: cartExist._id,
                 shoeItem: { $elemMatch: { id: shoeID } }
             }
         );
+        // ADD ITEM
         let addItem = null;
         if (shoeExist) {
             addItem = await Cart.findOneAndUpdate(
-                { _id: cartID, shoeItem: { $elemMatch: { id: shoeID } } },
+                { _id: cartExist._id, shoeItem: { $elemMatch: { id: shoeID } } },
                 { $set: { "shoeItem.$": req.body } },
                 { new: true }
             );
         } else {
             addItem = await Cart.findByIdAndUpdate(
-                cartID,
+                cartExist._id,
                 { $push: { shoeItem: req.body } },
                 { new: true }
             );

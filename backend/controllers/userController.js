@@ -10,7 +10,7 @@ export const deleteUser = async (req, res, next) => {
         const userInfo = await User.findById(req.params.id);
 
         // Xóa Avatar trên Cloud
-        if (userInfo.avatar !== "../public/images/avatardefault.jpg") {
+        if (userInfo.avatar !== "https://res.cloudinary.com/dtfei3453/image/upload/v1683022384/uploads/avatar_k0ohjl.webp") {
             const publics_id = deleteUser.avatar.split('/').slice(-2).join('/').replace('.jpg', '');
             const result = await cloudinary.uploader.destroy(publics_id);
             if (result !== "ok") return next(createError(404, "Xóa Hình ảnh trên Cloud thất bại!"));
@@ -59,8 +59,10 @@ export const uploadAvatar = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
     try {
         const updateInfo = req.body;
-        const salt = bcrypt.genSaltSync(10);
-        updateInfo.password = bcrypt.hashSync(req.body.password, salt);
+        if (updateInfo.password) {
+            const salt = bcrypt.genSaltSync(10);
+            updateInfo.password = bcrypt.hashSync(req.body.password, salt);
+        };
 
         const updateUser = await User.findByIdAndUpdate(
             req.params.id,

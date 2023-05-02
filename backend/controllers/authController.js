@@ -10,13 +10,11 @@ export const register = async (req, res, next) => {
         const hash = bcrypt.hashSync(req.body.password, salt);
 
         const newUser = new User({
-            username: req.body.username,
             email: req.body.email,
             fullname: req.body.fullname,
             gender: req.body.gender,
-            birthDay: req.body.birthDay,
             password: hash,
-        })
+        });
 
         await newUser.save();
         res.status(200).send({
@@ -31,7 +29,7 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
     try {
-        const resultUser = await User.findOne({ username: req.body.username });
+        const resultUser = await User.findOne({ email: req.body.email });
         if (!resultUser) return next(createError(404, "User Không Tồn Tại!"));
 
         const isLocking = resultUser.isLocked;
@@ -43,11 +41,18 @@ export const login = async (req, res, next) => {
         const token = jwt.sign({ id: resultUser._id, isAdmin: resultUser.isAdmin }, process.env.JWT);
 
         const { password, isAdmin, isLocked, ...otherDetails } = resultUser._doc;
-        const birthDayFormat = moment(resultUser.birthDay).format('DD-MM-YYYY');
+        const birthDay = moment(resultUser.birthDay).format('DD-MM-YYYY');
+        const nowDate = moment(Date.now()).format('DD-MM-YYYY');
+        if (birthDay === nowDate) return res.cookie(
+            "access_token",
+            token,
+            {
+                httpOnly: true
+            }).status(200).send({ ...otherDetails });
 
         res.cookie("access_token", token, {
             httpOnly: true
-        }).status(200).send({ birthDayFormat, ...otherDetails });
+        }).status(200).send({ birthDay, ...otherDetails });
     } catch (err) {
         next(err);
     }

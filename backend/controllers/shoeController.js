@@ -4,6 +4,78 @@ import Review from "../models/Review.js";
 import cloudinary from "../utils/cloudinary.js";
 import Cart from "../models/Cart.js";
 
+export const searchShoe = async (req, res, next) => {
+    try {
+        const query = req.query.query;
+        let resultShoe;
+        if (isNaN(query)) {
+            resultShoe = await Shoe.find({
+                $or: [
+                    { name: { $regex: query, $options: "i" } },
+                    { description: { $regex: query, $options: "i" } },
+                    { brand: query },
+                ]
+            })
+        } else {
+            resultShoe = await Shoe.find({
+                $or: [
+                    { name: { $regex: query, $options: "i" } },
+                    { description: { $regex: query, $options: "i" } },
+                    { brand: query },
+                    { sizes: { $in: [query] } },
+                    { price: query }
+                ]
+            })
+        }
+
+        if (!resultShoe.length) return res.status(200).send({
+            sucess: false,
+            message: "Không có Shoe thõa mãn!"
+        })
+
+        res.status(200).send({
+            sucess: true,
+            total: resultShoe.length,
+            data: resultShoe
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const getShoeByPrice = async (req, res, next) => {
+    try {
+        const listShoe = await Shoe.find({
+            price: {
+                $gt: req.query.minPrice,
+                $lt: req.query.maxPrice
+            }
+        });
+        res.status(200).send({
+            sucess: true,
+            total: listShoe.length,
+            data: listShoe
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const countShoeByBrand = async (req, res, next) => {
+    try {
+        const shoeBrand = req.params.brand;
+        const listShoeBrand = await Shoe.find({
+            brand: shoeBrand
+        });
+        res.status(200).send({
+            sucess: true,
+            total: listShoeBrand.length
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const getShoeByBrand = async (req, res, next) => {
     try {
         const shoeBrand = req.params.brand;
@@ -109,7 +181,10 @@ export const updateShoe = async (req, res, next) => {
     try {
         const shoeID = req.params.id;
 
-        req.body.images = req.files.map((file) => file.path);
+        if (req.files) {
+            req.body.images = req.files.map((file) => file.path);
+        };
+
         const saveShoe = await Shoe.findByIdAndUpdate(
             shoeID,
             { $set: req.body },
