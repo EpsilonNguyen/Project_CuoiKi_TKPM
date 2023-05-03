@@ -81,7 +81,25 @@ const ProductItem = () => {
                             </ul>
                             <ul class="py-2  list-none">
                                 <li>
-                                    <span>Slemens</span>
+                                    <span>Vans</span>
+                                    <span className="pr-2 float-right">30</span>
+                                </li>
+                            </ul>
+                            <ul class="py-2  list-none">
+                                <li>
+                                    <span>Balenciaga</span>
+                                    <span className="pr-2 float-right">30</span>
+                                </li>
+                            </ul>
+                            <ul class="py-2  list-none">
+                                <li>
+                                    <span>Converse</span>
+                                    <span className="pr-2 float-right">30</span>
+                                </li>
+                            </ul>
+                            <ul class="py-2  list-none">
+                                <li>
+                                    <span>Puma</span>
                                     <span className="pr-2 float-right">30</span>
                                 </li>
                             </ul>

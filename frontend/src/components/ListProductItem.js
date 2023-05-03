@@ -7,7 +7,7 @@ const ListProductItem = ({ count }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await axios.get('shoe/all');
+            const { data } = await axios.get('shoe/all/item');
             setItem(data);
         };
         fetchData();
