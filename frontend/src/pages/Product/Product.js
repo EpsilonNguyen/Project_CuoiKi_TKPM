@@ -2,7 +2,8 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ListProduct from '../../components/ListProduct';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from '../../hooks/axios';
 
 const Product = () => {
     const history = useHistory();
@@ -11,7 +12,26 @@ const Product = () => {
     const handleClickProductItem = () => {
         history.push('/product-items');
     };
-    console.log(count);
+    const [active, setActive] = useState(true);
+
+    const [countByBrand, setCountByBrand] = useState([]);
+    const [numToShow, setNumToShow] = useState(3);
+    const [shoes, setShoes] = useState(['Nike', 'Adidas', 'Vans', 'Balenciaga', 'Converse', 'Puma']);
+    useEffect(() => {
+        const fetchData = async () => {
+            let countArray = [];
+            for (let i = 0; i < 6; i++) {
+                const { data } = await axios.get(`shoe/brand/${shoes[i]}/total`);
+                countArray.push(data.total);
+            }
+            setCountByBrand(countArray || 0);
+        };
+        fetchData();
+    }, []);
+    const moreItem = () => {
+        setNumToShow(numToShow + 3);
+        setActive(false);
+    };
     return (
         <div className="h-full text-black bg-white">
             <Header />
@@ -58,30 +78,22 @@ const Product = () => {
                             <span>BRAND</span>
                         </div>
                         <div className="pl-2">
-                            <ul class="py-2 list-none">
-                                <li>
-                                    <span>Nike</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Adidas</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Slemens</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
+                            {countByBrand?.slice(0, numToShow).map((item, index) => (
+                                <ul class="py-2 list-none">
+                                    <li>
+                                        <span>{shoes[index]}</span>
+                                        <span className="pr-2 float-right">{item}</span>
+                                    </li>
+                                </ul>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="cursor-pointer text-center text-sm mt-5 py-2 pl-2 outline-none w-48 bg-gray-200">
-                        <button>MORE</button>
-                    </div>
+                    {active && (
+                        <div className="cursor-pointer text-center text-sm mt-5 py-2 pl-2 outline-none w-48 bg-gray-200">
+                            <button onClick={moreItem}>MORE</button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="ml-10 mr-20 w-full">

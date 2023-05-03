@@ -8,12 +8,12 @@ const Login = () => {
     const history = useHistory();
 
     const [empty, setEmpty] = useState({
-        username: false,
+        email: false,
         password: false,
     });
     const { dispatch } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
-        username: '',
+        email: '',
         password: '',
     });
     const handleChange = (e) => {
@@ -27,10 +27,10 @@ const Login = () => {
                 password: true,
             }));
             flag = false;
-        } else if (credentials.username.trim() === '') {
+        } else if (credentials.email.trim() === '') {
             setEmpty((prev) => ({
                 ...prev,
-                username: true,
+                email: true,
             }));
             flag = false;
         }
@@ -64,7 +64,7 @@ const Login = () => {
                             className="border-2 border-gray-400 rounded-md mt-2 p-1"
                             type="text"
                             placeholder="abc@gmail.com"
-                            id="username"
+                            id="email"
                             onChange={(e) => handleChange(e)}
                         />
                     </div>
