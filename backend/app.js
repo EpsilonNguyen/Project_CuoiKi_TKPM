@@ -10,7 +10,7 @@ import paymentRoute from "./routes/paymentRoute.js";
 import checkoutRoute from "./routes/checkoutRoute.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import cors from 'cors';
+import cors from "cors";
 
 const app = express();
 dotenv.config();
@@ -39,7 +39,11 @@ mongoose.connection.on('disconnected', () => {
 app.use(cookieParser());
 
 app.use(express.json());
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
+
 app.use("/shoeshop/api/auth", authRoute);
 app.use("/shoeshop/api/user", userRoute);
 app.use("/shoeshop/api/shoe", shoeRoute);

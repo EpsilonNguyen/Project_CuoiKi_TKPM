@@ -4,6 +4,18 @@ import Review from "../models/Review.js";
 import cloudinary from "../utils/cloudinary.js";
 import Cart from "../models/Cart.js";
 
+export const shoeHotDeal = async (req, res, next) => {
+    try {
+        const listHotDeal = await Shoe.find().limit(10).sort({ sold: -1 });
+        res.status(200).send({
+            success: true,
+            data: listHotDeal
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const searchShoe = async (req, res, next) => {
     try {
         const query = req.query.query;

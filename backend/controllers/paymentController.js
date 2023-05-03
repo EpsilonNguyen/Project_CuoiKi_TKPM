@@ -8,14 +8,14 @@ export const paymentConfirm = async (req, res, next) => {
     try {
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
-        const amount = req.session.amount;
+        const total = req.query.totalPrice;
 
         const execute_payment_json = {
             "payer_id": payerId,
             "transactions": [{
                 "amount": {
                     "currency": "USD",
-                    "total": amount.total
+                    "total": total
                 }
             }]
         };
@@ -24,11 +24,11 @@ export const paymentConfirm = async (req, res, next) => {
                 console.log(error.response);
                 throw error;
             } else {
-                const saveUser = await User.findById(req.session.userID);
-                saveUser.wallet += amount.total;
+                // const saveUser = await User.findById(req.session.userID);
+                const saveUser = await User.findById(req.query.user);
+                saveUser.wallet += total;
                 await saveUser.save();
 
-                req.session.destroy();
                 res.status(200).send({
                     success: true,
                     message: 'Giao dịch thành công!',
@@ -49,7 +49,7 @@ export const craetePayment = async (req, res, next) => {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:8800/shoeshop/api/payment/success",
+                "return_url": "http://localhost:8800/shoeshop/api/payment/success?user=" + req.params.id + "&totalPrice=" + req.query.totalPrice,
                 "cancel_url": "http://localhost:8800/shoeshop/api/payment/cancel"
             },
             "transactions": [{
@@ -65,12 +65,15 @@ export const craetePayment = async (req, res, next) => {
             if (error) {
                 throw error;
             } else {
-                req.session.userID = req.params.id;
-                req.session.amount = payment.transactions[0].amount;
+                // req.session.userID = req.params.id;
+                // req.session.amount = payment.transactions[0].amount;
                 for (let i = 0; i < payment.links.length; i++) {
                     if (payment.links[i].rel === 'approval_url') {
                         const href = payment.links[i].href;
-                        res.redirect(href);
+                        res.status(200).send({
+                            success: true,
+                            link: href
+                        })
                     }
                 }
             }
