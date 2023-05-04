@@ -1,5 +1,5 @@
 import express from "express";
-import { countShoeByBrand, createShoe, deleteImagesInShoe, deleteShoe, getAllShoe, getShoeByBrand, getShoeByID, getShoeByPrice, searchShoe, shoeHotDeal, updateShoe } from "../controllers/shoeController.js";
+import { countShoeByBrand, createShoe, deleteImagesInShoe, deleteShoe, getAllShoe, getShoeByBrand, getShoeByID, getShoeByPrice, infoHoyDealByBrand, searchShoe, shoeHotDeal, totalHotDealByBrand, updateShoe } from "../controllers/shoeController.js";
 import uploadCloud from "../utils/multerMiddleware.js";
 
 const router = express.Router();
@@ -35,6 +35,12 @@ router.get("/all/search", searchShoe);
 
 // HOT DEAL
 router.get("/hotdeal/sold", shoeHotDeal);
+
+// TOTAL HOT DEAL BY BRAND
+router.get("/hotdeal/brand/total", totalHotDealByBrand);
+
+// DATA HOT DEAL BY BRAND
+router.get("/hotdeal/data/:brandName", infoHoyDealByBrand);
 
 // TEST UPLOAD IMAGE
 router.post("/test/upload", uploadCloud.array("images"), (req, res, next) => {

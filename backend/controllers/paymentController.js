@@ -24,16 +24,15 @@ export const paymentConfirm = async (req, res, next) => {
                 console.log(error.response);
                 throw error;
             } else {
-                // const saveUser = await User.findById(req.session.userID);
-                const saveUser = await User.findById(req.query.user);
-                saveUser.wallet += total;
-                await saveUser.save();
-
+                const saveUser = await User.findByIdAndUpdate(
+                    req.query.user,
+                    { $inc: { wallet: total } }
+                );
                 res.status(200).send({
                     success: true,
-                    message: 'Giao dịch thành công!',
                     data: payment
-                });
+                })
+                res.redirect("http://localhost:3000/");
             }
         });
     } catch (err) {
@@ -46,7 +45,10 @@ export const craetePayment = async (req, res, next) => {
         const new_payment_json = {
             "intent": "authorize",
             "payer": {
-                "payment_method": "paypal"
+                "payment_method": "paypal",
+                "payer_info": {
+                    "payer_id": "testID"
+                }
             },
             "redirect_urls": {
                 "return_url": "http://localhost:8800/shoeshop/api/payment/success?user=" + req.params.id + "&totalPrice=" + req.query.totalPrice,
@@ -65,8 +67,6 @@ export const craetePayment = async (req, res, next) => {
             if (error) {
                 throw error;
             } else {
-                // req.session.userID = req.params.id;
-                // req.session.amount = payment.transactions[0].amount;
                 for (let i = 0; i < payment.links.length; i++) {
                     if (payment.links[i].rel === 'approval_url') {
                         const href = payment.links[i].href;
