@@ -1,17 +1,6 @@
-import express from 'express';
-import {
-    countShoeByBrand,
-    createShoe,
-    deleteImagesInShoe,
-    deleteShoe,
-    getAllShoe,
-    getShoeByBrand,
-    getShoeByID,
-    getShoeByPrice,
-    searchShoe,
-    updateShoe,
-} from '../controllers/shoeController.js';
-import uploadCloud from '../utils/multerMiddleware.js';
+import express from "express";
+import { countShoeByBrand, createShoe, deleteImagesInShoe, deleteShoe, getAllShoe, getShoeByBrand, getShoeByID, getShoeByPrice, searchShoe, updateShoe, infoHoyDealByBrand, shoeHotDeal, totalHotDealByBrand } from "../controllers/shoeController.js";
+import uploadCloud from "../utils/multerMiddleware.js";
 
 const router = express.Router();
 
@@ -42,7 +31,16 @@ router.get('/brand/:brand/total', countShoeByBrand);
 router.get('/get/price', getShoeByPrice);
 
 // SEARCH SHOE BY QUERRY
-router.get('/all/search', searchShoe);
+router.get("/all/search", searchShoe);
+
+// HOT DEAL
+router.get("/hotdeal/sold", shoeHotDeal);
+
+// TOTAL HOT DEAL BY BRAND
+router.get("/hotdeal/brand/total", totalHotDealByBrand);
+
+// DATA HOT DEAL BY BRAND
+router.get("/hotdeal/data/:brandName", infoHoyDealByBrand);
 
 // TEST UPLOAD IMAGE
 router.post('/test/upload', uploadCloud.array('images'), (req, res, next) => {

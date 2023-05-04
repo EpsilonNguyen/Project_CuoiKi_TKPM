@@ -3,6 +3,61 @@ import Shoe from "../models/Shoe.js";
 import Review from "../models/Review.js";
 import cloudinary from "../utils/cloudinary.js";
 import Cart from "../models/Cart.js";
+export const infoHoyDealByBrand = async (req, res, next) => {
+    try {
+        const brand = req.params.brandName;
+        const hotDeal = await Shoe.find(
+            {
+                brand: brand,
+                sold: { $gt: 0 }
+            }
+        );
+        res.status(200).send({
+            success: true,
+            total: hotDeal.length,
+            data: hotDeal
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+export const totalHotDealByBrand = async (req, res, next) => {
+    try {
+        const listBrand = ["Adidas", "Nike", "Vans", "Balenciaga", "Converse", "Puma"];
+        const hotDeal = await Promise.all(listBrand.map((brand) =>
+            Shoe.find({
+                brand: brand,
+                sold: { $gt: 0 }
+            })
+        ));
+        const total = hotDeal.map((deal) => deal.length);
+        const result = listBrand.map((brand, index) => {
+            return {
+                brand: brand,
+                total: total[index]
+            }
+        })
+
+        res.status(200).send({
+            success: true,
+            data: result
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const shoeHotDeal = async (req, res, next) => {
+    try {
+        const listHotDeal = await Shoe.find().limit(10).sort({ sold: -1 });
+        res.status(200).send({
+            success: true,
+            data: listHotDeal
+        })
+    } catch (err) {
+        next(err);
+    }
+}
 
 export const searchShoe = async (req, res, next) => {
     try {
