@@ -1,17 +1,23 @@
-import { useContext } from 'react';
+import axios from '../hooks/axios';
+import { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
     const history = useHistory();
     const { user } = useContext(AuthContext);
-    console.log(user);
     const handleLogin = () => {
         if (user != null) {
             history.push('/');
         } else history.push('/login');
     };
-
+    const [money, setMoney] = useState();
+    const payMoney = async () => {
+        try {
+            const { data } = await axios.post(`payment/${user._id}?totalPrice=25`);
+            window.open(`${data.link}`, '_blank');
+        } catch (err) {}
+    };
     return (
         <div>
             <div className="py-3 flex w-full">
@@ -33,6 +39,10 @@ const Header = () => {
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">Items</span>
                     <span className="cursor-pointer hover:text-blue-300">$0.00</span>
+                    <span className="cursor-pointer hover:text-blue-300" onClick={payMoney}>
+                        pay
+                    </span>
+                    <input type="number" onChange={(e) => setMoney(e.target.value)} />
                     <span className="cursor-pointer hover:text-blue-300">
                         <i className="fa fa-search" aria-hidden="true"></i>
                     </span>

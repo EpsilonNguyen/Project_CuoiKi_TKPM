@@ -1,8 +1,8 @@
-import { read } from "fs";
-import Cart from "../models/Cart.js";
-import User from "../models/User.js";
-import { createError } from "../utils/error.js";
-import paypal from "../utils/paypal.js";
+import { read } from 'fs';
+import Cart from '../models/Cart.js';
+import User from '../models/User.js';
+import { createError } from '../utils/error.js';
+import paypal from '../utils/paypal.js';
 
 export const paymentConfirm = async (req, res, next) => {
     try {
@@ -30,37 +30,37 @@ export const paymentConfirm = async (req, res, next) => {
                 );
                 res.status(200).send({
                     success: true,
+                    message: 'Giao dịch thành công!',
                     data: payment
-                })
+                });
                 res.redirect("http://localhost:3000/");
             }
         });
     } catch (err) {
         next(err);
     }
-}
+};
 
 export const craetePayment = async (req, res, next) => {
     try {
         const new_payment_json = {
             "intent": "authorize",
             "payer": {
-                "payment_method": "paypal",
-                "payer_info": {
-                    "payer_id": "testID"
-                }
+                "payment_method": "paypal"
             },
             "redirect_urls": {
                 "return_url": "http://localhost:8800/shoeshop/api/payment/success?user=" + req.params.id + "&totalPrice=" + req.query.totalPrice,
                 "cancel_url": "http://localhost:8800/shoeshop/api/payment/cancel"
             },
-            "transactions": [{
-                "amount": {
-                    "currency": "USD",
-                    "total": req.query.totalPrice
+            transactions: [
+                {
+                    amount: {
+                        currency: 'USD',
+                        total: req.query.totalPrice,
+                    },
+                    description: 'Nạp tiền vào tài khoản thành công!',
                 },
-                "description": "Nạp tiền vào tài khoản thành công!"
-            }]
+            ],
         };
 
         paypal.payment.create(new_payment_json, function (error, payment) {
@@ -78,8 +78,7 @@ export const craetePayment = async (req, res, next) => {
                 }
             }
         });
-
     } catch (err) {
         next(err);
     }
-}
+};
