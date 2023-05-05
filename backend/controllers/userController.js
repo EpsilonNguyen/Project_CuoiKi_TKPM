@@ -5,6 +5,25 @@ import cloudinary from "../utils/cloudinary.js";
 import Review from "../models/Review.js";
 import Shoe from "../models/Shoe.js";
 
+export const profileUser = async (req, res, next) => {
+    try {
+        const userID = req.params.id;
+        const profileUser = await User.findById(userID);
+        if (!profileUser) {
+            return res.status(404).send({
+                success: false,
+                message: "Người dùng không tồn tại!"
+            })
+        }
+        res.status(200).send({
+            success: true,
+            data: profileUser
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const deleteUser = async (req, res, next) => {
     try {
         const userInfo = await User.findById(req.params.id);
