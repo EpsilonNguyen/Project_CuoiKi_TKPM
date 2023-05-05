@@ -14,14 +14,31 @@ export const verifyToken = async (req, res, next) => {
 }
 
 export const verifyUser = async (req, res, next) => {
-  verifyToken(req, res, () => {
+  try {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next();
     } else {
       return next(createError(403, "Bạn chưa được cấp quyền!"));
     }
-  });
+
+  } catch (err) {
+    next(err);
+  }
 }
+
+// export const verifyUser = async (req, res, next) => {
+//   try {
+//     await verifyToken(req, res, () => {
+//       if (req.user.id === req.params.id || req.user.isAdmin) {
+//         next();
+//       } else {
+//         return next(createError(403, "Bạn chưa được cấp quyền!"));
+//       }
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// }
 
 export const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
