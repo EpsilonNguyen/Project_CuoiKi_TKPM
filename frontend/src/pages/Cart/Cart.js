@@ -3,7 +3,6 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import shoe from '../../images/shoe.jpg';
 import ModalPayment from '../../components/ModalPayment';
-import './Cart.css';
 
 const Cart = () => {
     const [num, setNum] = useState(0);

@@ -8,14 +8,17 @@ import axios from '../../hooks/axios';
 const Product = () => {
     const history = useHistory();
     const [count, setCount] = useState(10);
-
+    const [min, setMin] = useState(0);
+    const [max, setMax] = useState(300);
+    const [hotDeal, setHotDeal] = useState();
     const handleClickProductItem = () => {
         history.push('/product-items');
     };
     const [active, setActive] = useState(true);
-
     const [countByBrand, setCountByBrand] = useState([]);
     const [numToShow, setNumToShow] = useState(3);
+    const [sort, setSort] = useState('name');
+
     const [shoes, setShoes] = useState(['Nike', 'Adidas', 'Vans', 'Balenciaga', 'Converse', 'Puma']);
     useEffect(() => {
         const fetchData = async () => {
@@ -25,6 +28,13 @@ const Product = () => {
                 countArray.push(data.total);
             }
             setCountByBrand(countArray || 0);
+        };
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data } = await axios.get('shoe/hotdeal/brand/total');
+            setHotDeal(data.data);
         };
         fetchData();
     }, []);
@@ -43,22 +53,12 @@ const Product = () => {
                         </div>
                         <div className="pl-2">
                             <ul class="py-2 list-none cursor-pointer">
-                                <li className="py-2">
-                                    <span>Nike</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                                <li className="py-2">
-                                    <span>Adidas</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                                <li className="py-2">
-                                    <span>Vans</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                                <li className="py-2">
-                                    <span>Airmax</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
+                                {hotDeal?.slice(0, 4).map((item, index) => (
+                                    <li key={index} className="py-2">
+                                        <span>{item?.brand}</span>
+                                        <span className="pr-2 float-right">{item?.total}</span>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
@@ -69,7 +69,19 @@ const Product = () => {
                         </div>
                         <div className="pl-2">
                             <span>Ranger:</span>
-                            <span className="pr-2 float-right">$13.99 - $25.99</span>
+                            <span className="pr-2 float-right">
+                                ${min} - ${max}
+                            </span>
+                            <input
+                                onChange={(e) => {
+                                    setMax(e.target.value);
+                                }}
+                                type="range"
+                                min="0"
+                                max="300"
+                                step="2"
+                                className="w-full"
+                            />
                         </div>
                     </div>
 
@@ -79,7 +91,7 @@ const Product = () => {
                         </div>
                         <div className="pl-2">
                             {countByBrand?.slice(0, numToShow).map((item, index) => (
-                                <ul class="py-2 list-none">
+                                <ul key={index} class="py-2 list-none">
                                     <li>
                                         <span>{shoes[index]}</span>
                                         <span className="pr-2 float-right">{item}</span>
@@ -103,10 +115,12 @@ const Product = () => {
                         <span className="ml-5">13 Items</span>
                         <span className="ml-12 mr-5">Sort By</span>
                         <div>
-                            <select className="w-24 bg-gray-200 border-2 border-black">
-                                <option value="1">Name</option>
-                                <option value="2">Price</option>
-                                <option value="3">Brand</option>
+                            <select
+                                onChange={(e) => setSort(e.target.value)}
+                                className="w-24 bg-gray-200 border-2 border-black"
+                            >
+                                <option value="name">Name</option>
+                                <option value="price">Price</option>
                             </select>
                         </div>
                         <span className="ml-24 mr-5">Show</span>
@@ -136,7 +150,7 @@ const Product = () => {
                         </div>
                     </div>
 
-                    <ListProduct count={count} />
+                    <ListProduct count={count} max={max} sort={sort} />
 
                     <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200">
                         <span>1 2 3 4 5</span>

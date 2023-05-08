@@ -1,23 +1,31 @@
 import axios from '../hooks/axios';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
     const history = useHistory();
-    const { user } = useContext(AuthContext);
+    const { user, dispatch } = useContext(AuthContext);
+    const [info, setInfo] = useState();
+    const [money, setMoney] = useState();
     const handleLogin = () => {
         if (user != null) {
             history.push('/');
         } else history.push('/login');
     };
-    const [money, setMoney] = useState();
     const payMoney = async () => {
         try {
-            const { data } = await axios.post(`payment/${user._id}?totalPrice=25`);
+            const { data } = await axios.post(`payment/${user._id}?totalPrice=${money}`);
             window.open(`${data.link}`, '_blank');
         } catch (err) {}
     };
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data } = await axios.get(`user/profile/${user._id}`);
+            setInfo(data.data);
+        };
+        fetchData();
+    }, [info?.wallet]);
     return (
         <div>
             <div className="py-3 flex w-full">
@@ -38,7 +46,7 @@ const Header = () => {
                         <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">Items</span>
-                    <span className="cursor-pointer hover:text-blue-300">$0.00</span>
+                    <span className="cursor-pointer hover:text-blue-300">${info?.wallet}</span>
                     <span className="cursor-pointer hover:text-blue-300" onClick={payMoney}>
                         pay
                     </span>
