@@ -19,6 +19,11 @@ const UserScheme = new mongoose.Schema({
         enum: ["Nam", "Nữ", "Khác"],
         require: true
     },
+    shipAddress: {
+        address: { type: String },
+        city: { type: String },
+        province: { type: String },
+    },
     birthDay: {
         type: Date,
         require: true

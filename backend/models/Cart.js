@@ -21,11 +21,6 @@ const CartSchema = new mongoose.Schema({
             size: { type: Number, require: true },
         }
     ],
-    shipAddress: {
-        address: { type: String, require: true },
-        city: { type: String, require: true },
-        province: { type: String, require: true },
-    },
     toal: {
         type: Number,
         required: true,
