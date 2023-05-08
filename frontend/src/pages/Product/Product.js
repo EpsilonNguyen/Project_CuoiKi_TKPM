@@ -8,6 +8,8 @@ import axios from '../../hooks/axios';
 const Product = () => {
     const history = useHistory();
     const [count, setCount] = useState(10);
+    const [min, setMin] = useState(0);
+    const [max, setMax] = useState(50);
 
     const handleClickProductItem = () => {
         history.push('/product-items');
@@ -69,7 +71,10 @@ const Product = () => {
                         </div>
                         <div className="pl-2">
                             <span>Ranger:</span>
-                            <span className="pr-2 float-right">$13.99 - $25.99</span>
+                            <span className="pr-2 float-right">${min} - ${max}</span>
+                            <input
+                                onChange={(e) => { setMax(e.target.value) }}
+                                type="range" min="0" max="50" step="2" className='w-full' />
                         </div>
                     </div>
 
