@@ -42,8 +42,15 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.use(cors({ credentials: true, origin: true }));
+app.use(
+    cors({
+        credentials: true,
+        origin: true,
+    }),
+);
+
 app.options('*', cors({ credentials: true, origin: true }));
+
 app.use('/shoeshop/api/auth', authRoute);
 app.use('/shoeshop/api/user', userRoute);
 app.use('/shoeshop/api/shoe', shoeRoute);

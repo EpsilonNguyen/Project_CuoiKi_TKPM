@@ -8,6 +8,7 @@ import Cart from './Cart/Cart';
 import Contact from './Contact/Contact';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Admin from './Admin/Admin';
 
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 
@@ -25,20 +26,23 @@ function App() {
                 <Route path="/register">
                     <Register />
                 </Route>
-                <Route path="/product" exact>
+                <Route path="/product">
                     <Product />
                 </Route>
-                <Route path="/product-items" exact>
+                <Route path="/product-items">
                     <ProductItem />
                 </Route>
-                <Route path="/product-info" exact>
+                <Route path="/product-info/:id">
                     <ProductInfo />
                 </Route>
-                <Route path="/cart" exact>
+                <Route path="/cart">
                     <Cart />
                 </Route>
-                <Route path="/contact" exact>
+                <Route path="/contact">
                     <Contact />
+                </Route>
+                <Route path="/admin">
+                    <Admin />
                 </Route>
             </Switch>
         </BrowserRouter>

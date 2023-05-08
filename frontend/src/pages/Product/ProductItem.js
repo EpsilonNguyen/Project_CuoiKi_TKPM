@@ -2,20 +2,45 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ListProductItem from '../../components/ListProductItem';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from '../../hooks/axios';
 
 const ProductItem = () => {
     const history = useHistory();
-
-    const handleClickList = () => {
-        alert('Click me');
-    };
-
     const handleClickProductList = () => {
         history.push('/product');
     };
+    const [active, setActive] = useState(true);
+    const [countByBrand, setCountByBrand] = useState([]);
+    const [numToShow, setNumToShow] = useState(3);
     const [count, setCount] = useState(3);
+    const [hotDeal, setHotDeal] = useState();
+    const [sort, setSort] = useState('name');
 
+    const [shoes, setShoes] = useState(['Nike', 'Adidas', 'Vans', 'Balenciaga', 'Converse', 'Puma']);
+    useEffect(() => {
+        const fetchData = async () => {
+            let countArray = [];
+            for (let i = 0; i < 6; i++) {
+                const { data } = await axios.get(`shoe/brand/${shoes[i]}/total`);
+                countArray.push(data.total);
+            }
+            setCountByBrand(countArray || 0);
+        };
+        fetchData();
+    }, []);
+    const moreItem = () => {
+        setNumToShow(numToShow + 3);
+        setActive(false);
+    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data } = await axios.get('shoe/hotdeal/brand/total');
+            setHotDeal(data.data);
+        };
+        fetchData();
+    }, []);
+    console.log(sort);
     return (
         <div className="h-full text-black bg-white">
             <Header />
@@ -27,27 +52,12 @@ const ProductItem = () => {
                         </div>
                         <div className="pl-2">
                             <ul class="py-2 list-none cursor-pointer">
-                                <li
-                                    className="py-2"
-                                    onClick={() => {
-                                        handleClickList();
-                                    }}
-                                >
-                                    <span>Nike</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                                <li className="py-2">
-                                    <span>Adidas</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                                <li className="py-2">
-                                    <span>Vans</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                                <li className="py-2">
-                                    <span>Airmax</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
+                                {hotDeal?.slice(0, 4).map((item, index) => (
+                                    <li key={index} className="py-2">
+                                        <span>{item?.brand}</span>
+                                        <span className="pr-2 float-right">{item?.total}</span>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
@@ -67,48 +77,22 @@ const ProductItem = () => {
                             <span>BRAND</span>
                         </div>
                         <div className="pl-2">
-                            <ul class="py-2 list-none">
-                                <li>
-                                    <span>Nike</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Adidas</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Vans</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Balenciaga</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Converse</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
-                            <ul class="py-2  list-none">
-                                <li>
-                                    <span>Puma</span>
-                                    <span className="pr-2 float-right">30</span>
-                                </li>
-                            </ul>
+                            {countByBrand?.slice(0, numToShow).map((item, index) => (
+                                <ul class="py-2 list-none">
+                                    <li>
+                                        <span>{shoes[index]}</span>
+                                        <span className="pr-2 float-right">{item}</span>
+                                    </li>
+                                </ul>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="cursor-pointer text-center text-sm mt-5 py-2 pl-2 outline-none w-48 bg-gray-200">
-                        <button>MORE</button>
-                    </div>
+                    {active && (
+                        <div className="cursor-pointer text-center text-sm mt-5 py-2 pl-2 outline-none w-48 bg-gray-200">
+                            <button onClick={moreItem}>MORE</button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="ml-10 mr-20 w-full">
@@ -118,10 +102,12 @@ const ProductItem = () => {
                         <span className="ml-5">13 Items</span>
                         <span className="ml-12 mr-5">Sort By</span>
                         <div>
-                            <select className="w-24 bg-gray-200 border-2 border-black">
-                                <option value="1">Name</option>
-                                <option value="2">Price</option>
-                                <option value="3">Brand</option>
+                            <select
+                                onChange={(e) => setSort(e.target.value)}
+                                className="w-24 bg-gray-200 border-2 border-black"
+                            >
+                                <option value="name">Name</option>
+                                <option value="price">Price</option>
                             </select>
                         </div>
                         <span className="ml-24 mr-5">Show</span>
@@ -150,7 +136,7 @@ const ProductItem = () => {
                         </div>
                     </div>
 
-                    <ListProductItem count={count} />
+                    <ListProductItem count={count} sort={sort} />
 
                     <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200">
                         <span>1 2 3 4 5</span>

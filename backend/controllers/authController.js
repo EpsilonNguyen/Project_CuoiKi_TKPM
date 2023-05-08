@@ -3,11 +3,20 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import moment from "moment";
+import Cart from "../models/Cart.js";
 
 export const register = async (req, res, next) => {
     try {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
+
+        const existUser = await User.findOne({ email: req.body.email });
+        if (!existUser) {
+            return res.status(404).send({
+                success: false,
+                message: "Email đã được đăng ký!"
+            })
+        };
 
         const newUser = new User({
             email: req.body.email,
@@ -16,7 +25,17 @@ export const register = async (req, res, next) => {
             password: hash,
         });
 
-        await newUser.save();
+        const saveUser = await newUser.save();
+        if (!saveUser) {
+            return res.status(404).send({
+                success: false,
+                message: "Đăng Ký User Mới Không Thành Công!"
+            });
+        }
+
+        const newCart = new Cart({ user: saveUser._id });
+        await newCart.save();
+
         res.status(200).send({
             success: true,
             message: "Đăng Ký User Mới Thành Công!",
