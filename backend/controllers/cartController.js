@@ -2,6 +2,27 @@ import { createError } from "../utils/error.js";
 import Cart from "../models/Cart.js";
 import User from "../models/User.js";
 
+export const updateQuantityShoeItemInCart = async (req, res, next) => {
+    try {
+        const cartID = req.params.cartID;
+        const shoeID = req.body.shoeID;
+        const quantity = req.body.quantity;
+
+        const saveCart = await Cart.findOneAndUpdate(
+            { _id: cartID, shoeItem: { $elemMatch: { id: shoeID } } },
+            { $set: { "shoeItem.$.quantity": quantity } },
+            { new: true }
+        );
+
+        res.status(200).send({
+            success: true,
+            data: saveCart
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const addShoeItemInCart = async (req, res, next) => {
     try {
         const userID = req.params.userID;
@@ -56,6 +77,19 @@ export const deleteShoeItemInCart = async (req, res, next) => {
         if (!deleteItem) return next(createError(404, "Giày muốn xóa, không tồn tại trong Giỏ hàng!"));
 
         res.status(200).send("Xóa Giày ra khỏi Giỏ hàng thành công!");
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const getCartByUserID = async (req, res, next) => {
+    try {
+        const userID = req.params.id;
+        const cartExist = await Cart.findOne({ user: userID });
+
+        if (!cartExist) return next(createError(404, "Giỏ hàng không tồn tại!"));
+
+        res.status(200).send(cartExist);
     } catch (err) {
         next(err);
     }

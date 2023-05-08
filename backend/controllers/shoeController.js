@@ -154,18 +154,21 @@ export const getShoeByID = async (req, res, next) => {
         const shoeInfo = await Shoe.findById(shoeID);
 
         // TÍNH TỔNG RATING CỦA 1 SHOE
+        let averageRating = 0;
         const listReviews = await Promise.all(shoeInfo.reviews.map((review) => Review.findById(review)));
         const totalRating = listReviews.reduce((total, review) => total + review.rating, 0);
         const totalReview = listReviews.length;
-        const averageRating = (totalRating / totalReview).toFixed(2);
+        if (totalReview !== 0) {
+            averageRating = (totalRating / totalReview).toFixed(2);
+        }
 
         // GÁN GIÁ TRỊ RATING VS TOTAL VÀO THÔNG TIN CỦA SHOE
         const saveShoe = await Shoe.findByIdAndUpdate(
             shoeID,
             {
                 $set: {
-                    rating: averageRating || 0,
-                    numRev: totalReview || 0
+                    rating: averageRating,
+                    numRev: totalReview
                 }
             },
             { new: true }
