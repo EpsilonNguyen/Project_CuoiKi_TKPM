@@ -1,11 +1,11 @@
 import axios from '../hooks/axios';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
     const history = useHistory();
-    const { user } = useContext(AuthContext);
+    const { user, dispatch } = useContext(AuthContext);
     const handleLogin = () => {
         if (user != null) {
             history.push('/');
@@ -14,7 +14,7 @@ const Header = () => {
     const [money, setMoney] = useState();
     const payMoney = async () => {
         try {
-            const { data } = await axios.post(`payment/${user._id}?totalPrice=25`);
+            const { data } = await axios.post(`payment/${user._id}?totalPrice=${money}`);
             window.open(`${data.link}`, '_blank');
         } catch (err) {}
     };
@@ -38,7 +38,7 @@ const Header = () => {
                         <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">Items</span>
-                    <span className="cursor-pointer hover:text-blue-300">$0.00</span>
+                    <span className="cursor-pointer hover:text-blue-300">${user?.wallet}</span>
                     <span className="cursor-pointer hover:text-blue-300" onClick={payMoney}>
                         pay
                     </span>
