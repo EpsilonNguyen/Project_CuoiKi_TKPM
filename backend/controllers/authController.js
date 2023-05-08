@@ -11,7 +11,7 @@ export const register = async (req, res, next) => {
         const hash = bcrypt.hashSync(req.body.password, salt);
 
         const existUser = await User.findOne({ email: req.body.email });
-        if (!existUser) {
+        if (existUser) {
             return res.status(404).send({
                 success: false,
                 message: "Email đã được đăng ký!"
