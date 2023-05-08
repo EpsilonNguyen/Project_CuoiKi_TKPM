@@ -6,6 +6,7 @@ import ProductItem from "./Product/ProductItem";
 import ProductInfo from './Product/ProductInfo';
 import Cart from './Cart/Cart';
 import Contact from './Contact/Contact';
+import Admin from './Admin/Admin';
 
 import {
   BrowserRouter,
@@ -27,20 +28,23 @@ function App() {
         <Route path="/register">
           <Register />
         </Route>
-        <Route path="/product" exact>
+        <Route path="/product">
           <Product />
         </Route>
-        <Route path="/product-items" exact>
+        <Route path="/product-items">
           <ProductItem />
         </Route>
-        <Route path="/product-info" exact>
+        <Route path="/product-info">
           <ProductInfo />
         </Route>
-        <Route path="/cart" exact>
+        <Route path="/cart">
           <Cart />
         </Route>
-        <Route path="/contact" exact>
+        <Route path="/contact">
           <Contact />
+        </Route>
+        <Route path="/admin">
+          <Admin />
         </Route>
       </Switch>
     </BrowserRouter>
