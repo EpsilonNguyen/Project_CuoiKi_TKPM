@@ -45,7 +45,7 @@ export const lockUser = async (req, res, next) => {
 
 export const getAllUser = async (req, res, next) => {
     try {
-        const listUser = await User.find();
+        const listUser = await User.find({ isAdmin: false });
 
         res.status(200).send({
             success: true,
