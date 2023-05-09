@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUser, getAllUser, profileUser, updateUser, uploadAvatar } from "../controllers/userController.js";
+import { deleteUser, getAllUser, lockUser, profileUser, unlockUser, updateUser, uploadAvatar } from "../controllers/userController.js";
 import uploadCloud from "../utils/multerMiddleware.js";
 import { verifyToken, verifyUser } from "../utils/verify.js";
 
@@ -10,6 +10,12 @@ router.get("/profile/:id", profileUser);
 
 // GET ALL USER
 router.get("/all", getAllUser);
+
+// LOCK USER
+router.put("/lock/:userID", lockUser);
+
+// UNLOCK USER
+router.put("/unlock/:userID", unlockUser);
 
 // UPDATE USER
 router.put("/update/:id", verifyToken, verifyUser, uploadCloud.single("avatar"), updateUser);
