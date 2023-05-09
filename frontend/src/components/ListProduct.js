@@ -7,7 +7,6 @@ const ListProduct = ({ count, max, sort }) => {
     const [item, setItem] = useState();
     const [currentMax, setCurrentMax] = useState(null);
     const history = useHistory();
-
     useEffect(() => {
         const fetchData = async () => {
             let apiUrl = 'shoe/all/item';

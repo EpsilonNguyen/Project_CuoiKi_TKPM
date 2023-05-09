@@ -3,21 +3,25 @@ import Header from '../../components/Header';
 import BestSeller from '../../components/BestSeller';
 import { useHistory } from 'react-router-dom';
 import shoe from '../../images/shoe.jpg';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import axios from '../../hooks/axios';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const ProductInfo = () => {
     const history = useHistory();
+    const { user } = useContext(AuthContext);
     const { id } = useParams();
     const [num, setNum] = useState(0);
     const [info, setInfo] = useState();
+    const [size, setSize] = useState();
 
     const handlePluse = () => {
-        if (num >= 15) {
-            setNum(15);
+        if (num >= info?.quantity) {
+            setNum(info?.quantity);
         } else {
             let newNum = num + 1;
             setNum(newNum);
@@ -34,43 +38,64 @@ const ProductInfo = () => {
     };
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = axios.get(`shoe/${id}`);
+            const { data } = await axios.get(`shoe/${id}`);
             setInfo(data);
+            setSize(data.sizes[0]);
         };
         fetchData();
     }, [id]);
-    console.log(info);
-
+    const addToCart = async () => {
+        if (info?.quantity > 0) {
+            try {
+                await axios.put(`cart/update/add/${user._id}`, {
+                    id: id,
+                    name: info?.name,
+                    quantity: num,
+                    price: info?.price,
+                    size: size,
+                });
+                toast.success('Thêm vào giỏ hàng thành công');
+            } catch (err) {
+                console.log(err.message);
+            }
+        } else {
+            toast.error('Sản phẩm đã hết hàng');
+        }
+    };
+    // console.log(info);
     return (
         <div className="h-full text-black bg-white">
             <Header />
             <div className="flex gap-8 mb-5">
                 <div className="w-56 ml-12">
-                    <img className="h-48 w-56 shadow-xl" src={shoe} alt="shoe" />
+                    <img className="h-48 w-56 shadow-xl" src={info?.images[0]} alt="shoe" />
                 </div>
 
                 <div className="w-[400px] flex flex-col gap-5">
-                    <div className="font-bold text-xl border-b-2 py-3">Nike Air Max 270 React</div>
+                    <div className="font-bold text-xl border-b-2 py-3">{info?.name}</div>
 
                     <div className="flex flex-col gap-3 border-b-2 pb-3">
                         <div className="flex">
-                            <span className="text-blue-400 font-bold text-xl">$299.43</span>
-                            <span className="text-blue-300 ml-auto mr-16">Quantity: 1000</span>
+                            <span className="text-blue-400 font-bold text-xl">${info?.price}</span>
+                            <span className="text-blue-300 ml-auto mr-16">Quantity: {info?.quantity}</span>
                         </div>
                         <div className="flex flex-col gap-3">
-                            <span>Availability:</span>
-                            <span>Category:</span>
+                            <span>Brand: {info?.brand}</span>
                             <span>Free Shipping</span>
                         </div>
                     </div>
                     <div className="border-b-2 pb-3">
                         <div className="flex gap-5">
                             <label>Size</label>
-                            <select name="cars" id="cars" className="border-2 border-gray-400 px-3 w-[100px]">
-                                <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="opel">Opel</option>
-                                <option value="audi">Audi</option>
+                            <select
+                                onChange={(e) => setSize(e.target.value)}
+                                name="cars"
+                                id="cars"
+                                className="border-2 border-gray-400 px-3 w-[100px]"
+                            >
+                                <option value={info?.sizes[0]}>{info?.sizes[0]}</option>
+                                <option value={info?.sizes[1]}>{info?.sizes[1]}</option>
+                                <option value={info?.sizes[2]}>{info?.sizes[2]}</option>
                             </select>
                         </div>
                     </div>
@@ -96,7 +121,7 @@ const ProductInfo = () => {
                                 +
                             </button>
                         </div>
-                        <button className="bg-blue-200 h-8 w-32 ml-auto">
+                        <button id="addToCart" onClick={addToCart} className="bg-blue-200 h-8 w-32 ml-auto">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                             <span className="ml-2">Add To Cart</span>
                         </button>
@@ -112,10 +137,10 @@ const ProductInfo = () => {
                         </TabList>
 
                         <TabPanel>
-                            <h2>Any content 1</h2>
+                            <h2>{info?.description}</h2>
                         </TabPanel>
                         <TabPanel>
-                            <h2>Any content 2</h2>
+                            <h2>{info?.reviews}</h2>
                         </TabPanel>
                         <TabPanel>
                             <h2>Any content 3</h2>
