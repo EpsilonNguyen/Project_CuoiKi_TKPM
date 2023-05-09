@@ -5,6 +5,19 @@ import cloudinary from "../utils/cloudinary.js";
 import Review from "../models/Review.js";
 import Shoe from "../models/Shoe.js";
 
+export const getAllUser = async (req, res, next) => {
+    try {
+        const listUser = await User.find();
+
+        res.status(200).send({
+            success: true,
+            data: listUser
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const profileUser = async (req, res, next) => {
     try {
         const userID = req.params.id;
