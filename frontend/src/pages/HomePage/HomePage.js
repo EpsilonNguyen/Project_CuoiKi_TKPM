@@ -13,11 +13,9 @@ const HomePage = () => {
             <MainLogo />
             <BestSeller />
             <ContentLogo />
-            <LatestNew />
-            <FeaturePro />
             <Footer />
         </div>
-    )
-}
+    );
+};
 
 export default HomePage;
