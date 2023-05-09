@@ -8,7 +8,6 @@ import Cart from './Cart/Cart';
 import Contact from './Contact/Contact';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Admin from './Admin/Admin';
 
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 
@@ -40,9 +39,6 @@ function App() {
                 </Route>
                 <Route path="/contact">
                     <Contact />
-                </Route>
-                <Route path="/admin">
-                    <Admin />
                 </Route>
             </Switch>
         </BrowserRouter>
