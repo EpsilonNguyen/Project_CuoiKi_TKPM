@@ -5,6 +5,44 @@ import cloudinary from "../utils/cloudinary.js";
 import Review from "../models/Review.js";
 import Shoe from "../models/Shoe.js";
 
+export const unlockUser = async (req, res, next) => {
+    try {
+        const userID = req.params.userID;
+
+        await User.findByIdAndUpdate(
+            userID,
+            { isLocked: false },
+            { new: true }
+        );
+
+        res.status(200).send({
+            success: true,
+            message: "Tài khoản của người dùng đã được mở khóa!"
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const lockUser = async (req, res, next) => {
+    try {
+        const userID = req.params.userID;
+
+        await User.findByIdAndUpdate(
+            userID,
+            { isLocked: true },
+            { new: true }
+        );
+
+        res.status(200).send({
+            success: true,
+            message: "Tài khoản của người dùng đã được khóa!"
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const getAllUser = async (req, res, next) => {
     try {
         const listUser = await User.find();
