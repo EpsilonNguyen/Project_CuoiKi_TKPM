@@ -22,10 +22,10 @@ const Header = () => {
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get(`user/profile/${user._id}`);
-            setInfo(data.data);
+            setInfo(data.data.wallet);
         };
         fetchData();
-    }, [info?.wallet]);
+    }, []);
     return (
         <div>
             <div className="py-3 flex w-full">
@@ -46,7 +46,7 @@ const Header = () => {
                         <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">Items</span>
-                    <span className="cursor-pointer hover:text-blue-300">${info?.wallet}</span>
+                    <span className="cursor-pointer hover:text-blue-300">${info}</span>
                     <span className="cursor-pointer hover:text-blue-300" onClick={payMoney}>
                         pay
                     </span>
