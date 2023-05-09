@@ -153,7 +153,8 @@ const Product = () => {
                     <ListProduct count={count} max={max} sort={sort} />
 
                     <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200">
-                        <span>1 2 3 4 5</span>
+                        <span>1</span>
+                        <span>2</span>
                     </div>
                 </div>
             </div>

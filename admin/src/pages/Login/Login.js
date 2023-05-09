@@ -6,12 +6,12 @@ import axios from '../../hooks/axios';
 
 const Login = () => {
     const history = useHistory();
+    const { dispatch } = useContext(AuthContext);
 
     const [empty, setEmpty] = useState({
         email: false,
         password: false,
     });
-    const { dispatch } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
         email: '',
         password: '',
@@ -45,10 +45,9 @@ const Login = () => {
         e.preventDefault();
         if (checkForm() === false) return;
         try {
-            const { data } = await axios.post('auth/login', credentials);
-            // Cookies.set("userInfo", JSON.stringify(data));
+            const { data } = await axios.post('auth/loginAdmin', credentials);
             dispatch({ type: 'LOGIN_SUCCESS', payload: data });
-            history.push('/');
+            history.push('/admin');
         } catch (err) {
             dispatch({ type: 'LOGIN_FAILURE', payload: err.message });
         }

@@ -9,7 +9,7 @@ const Header = () => {
     const [info, setInfo] = useState();
     const [money, setMoney] = useState();
     const handleLogin = () => {
-        if (user != null) {
+        if (user !== null) {
             history.push('/');
         } else history.push('/login');
     };
@@ -26,6 +26,11 @@ const Header = () => {
         };
         fetchData();
     }, []);
+    const handleCart = () => {
+        if (user !== null) {
+            history.push('/cart');
+        } else history.push('/login');
+    };
     return (
         <div>
             <div className="py-3 flex w-full">
@@ -37,12 +42,7 @@ const Header = () => {
                     <span onClick={handleLogin} className="cursor-pointer hover:text-blue-300">
                         <i className="fa fa-user mr-2" aria-hidden="true"></i>My profile
                     </span>
-                    <span
-                        onClick={() => {
-                            history.push('/cart');
-                        }}
-                        className="cursor-pointer hover:text-blue-300"
-                    >
+                    <span onClick={handleCart} className="cursor-pointer hover:text-blue-300">
                         <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">Items</span>
