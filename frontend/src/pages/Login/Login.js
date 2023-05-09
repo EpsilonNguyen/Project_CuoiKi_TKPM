@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from '../../hooks/axios';
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const history = useHistory();
@@ -47,6 +48,10 @@ const Login = () => {
         try {
             const { data } = await axios.post('auth/login', credentials);
             // Cookies.set("userInfo", JSON.stringify(data));
+            if (data?.isBlocked) {
+                toast.error('Tài khoản của bạn bị khóa, vui lòng liên hệ với quản trị');
+                return;
+            }
             dispatch({ type: 'LOGIN_SUCCESS', payload: data });
             history.push('/');
         } catch (err) {

@@ -3,10 +3,13 @@ import { useContext, useEffect, useState } from 'react';
 import shoe from '../images/shoe.jpg';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../contexts/AuthContext';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const ListProductItem = ({ count, sort }) => {
     const { user } = useContext(AuthContext);
     const [product, setProduct] = useState();
+    const history = useHistory();
+
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get('shoe/all/item');
@@ -21,16 +24,18 @@ const ListProductItem = ({ count, sort }) => {
     }, []);
 
     const handleAddCart = async (product) => {
-        try {
-            await axios.put(`cart/update/add/${user._id}`, {
-                id: product._id,
-                name: product.name,
-                quantity: 1,
-                size: product.sise[3],
-            });
-        } catch (err) {
-            console.log(err.message);
-        }
+        if (user !== null) {
+            try {
+                await axios.put(`cart/update/add/${user._id}`, {
+                    id: product._id,
+                    name: product.name,
+                    quantity: 1,
+                    size: product.sise[0],
+                });
+            } catch (err) {
+                console.log(err.message);
+            }
+        } else history.push('login');
     };
     return (
         <div className="flex mt-5">
