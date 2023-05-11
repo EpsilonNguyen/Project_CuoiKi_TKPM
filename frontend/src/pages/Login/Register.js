@@ -1,22 +1,98 @@
 import logo from '../../images/logo.png';
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import axios from '../../hooks/axios';
 
 const Register = () => {
     const history = useHistory();
-
-    const [check, setCheck] = useState({
-        existedEmail: false,
-        errorPwd: false,
-    });
     const [info, setInfo] = useState({
         email: '',
+        fullname: '',
         password: '',
         rePassword: '',
         gender: 'male',
-        birthday: '',
     });
 
+    const handleChange = (e) => {
+        setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    };
+    const handleChecked = async (e) => {
+        setInfo((prev) => ({ ...prev, gender: e.target.value }));
+    };
+
+    async function isExistedUser() {
+        try {
+            const { data: user } = await axios.get(`/user/get-profile?email=${info.email}`);
+            if (user === null) {
+                return false;
+            }
+            return true;
+        } catch (error) {}
+    }
+    async function register() {
+        try {
+            const { data } = await axios.post(`/auth/register`, { info });
+            if (data.success === false) {
+                return false;
+            }
+            return true;
+        } catch (error) {}
+    }
+
+    const handleRegister = async () => {
+        if (isEmpty()) {
+            toast.error('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+        if (!isValidEmail(info?.email)) {
+            toast.error('Vui lòng nhập đúng định dạng email');
+            return;
+        }
+        if (await isExistedUser()) {
+            toast.error('Email đã tồn tại');
+            return;
+        }
+        if (checkPassword() === false) {
+            return;
+        }
+        if (await register()) {
+            toast.success('Đăng kí thành công');
+            history.push('/login');
+        }
+    };
+    const isValidEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    };
+    const handleCheckEmail = () => {
+        if (!isValidEmail(info.email)) {
+            toast.error('Vui lòng nhập đúng định dạng email');
+        }
+    };
+    const checkPassword = () => {
+        if (info.password.length < 6 || info.rePassword.length < 6) {
+            toast.error('Mật khẩu ít nhất 6 ký tự');
+            return false;
+        }
+        if (info.password !== info.rePassword) {
+            toast.error('Mật khẩu không hợp lệ');
+            return false;
+        }
+        return true;
+    };
+    const isEmpty = () => {
+        if (
+            info.email.length === 0 ||
+            info.gender.length === 0 ||
+            info.fullname.length === 0 ||
+            info.password.length === 0 ||
+            info.rePassword.length === 0
+        )
+            return true;
+        return false;
+    };
+    console.log(info);
     return (
         <div className="relative flex">
             <div className="w-[50%] h-full flex justify-center mt-24">
@@ -25,46 +101,71 @@ const Register = () => {
                     <div className="flex flex-col">
                         <label className="font-bold">Địa chỉ Email</label>
                         <input
+                            id="email"
                             className="border-2 border-gray-400 rounded-md mt-2 p-1"
                             type="text"
+                            onBlur={handleCheckEmail}
+                            onChange={handleChange}
                             placeholder="abc@gmail.com"
                         />
                     </div>
                     <div className="flex flex-col">
                         <label className="font-bold">Họ và tên</label>
                         <input
+                            id="fullname"
                             className="border-2 border-gray-400 rounded-md mt-2 p-1"
                             type="text"
+                            onChange={handleChange}
                             placeholder="Nguyễn Văn A"
                         />
                     </div>
                     <div className="flex flex-col">
                         <label className="font-bold">Mật khẩu</label>
                         <input
+                            id="password"
                             className="border-2 border-gray-400 rounded-md mt-2 p-1"
-                            type="text"
+                            type="password"
+                            onChange={handleChange}
                             placeholder="**********"
                         />
                     </div>
                     <div className="flex flex-col">
                         <label className="font-bold">Nhập lại mật khẩu</label>
                         <input
+                            id="rePassword"
+                            onChange={handleChange}
                             className="border-2 border-gray-400 rounded-md mt-2 p-1"
-                            type="text"
+                            type="password"
                             placeholder="**********"
                         />
                     </div>
                     <div className="flex px-6">
                         <div>
-                            <input type="checkbox" value="" />
+                            <input
+                                id="gender"
+                                type="checkbox"
+                                value="male"
+                                onChange={handleChecked}
+                                checked={info.gender === 'male'}
+                            />
                             <label> Nam</label>
                         </div>
                         <div className="ml-auto">
-                            <input type="checkbox" value="" />
+                            <input
+                                id="gender"
+                                type="checkbox"
+                                value="female"
+                                onChange={handleChecked}
+                                checked={info.gender === 'female'}
+                            />
                             <label> Nữ</label>
                         </div>
                     </div>
-                    <button className="item-center bg-black text-white py-2 rounded-md" type="button">
+                    <button
+                        onClick={handleRegister}
+                        className="item-center bg-black text-white py-2 rounded-md"
+                        type="button"
+                    >
                         Đăng ký
                     </button>
                     <div className="flex justify-center gap-2">

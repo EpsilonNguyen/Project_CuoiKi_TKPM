@@ -15,7 +15,7 @@ const ProductInfo = () => {
     const history = useHistory();
     const { user } = useContext(AuthContext);
     const { id } = useParams();
-    const [num, setNum] = useState(0);
+    const [num, setNum] = useState(1);
     const [info, setInfo] = useState();
     const [size, setSize] = useState();
 
@@ -29,7 +29,9 @@ const ProductInfo = () => {
     };
 
     const handleMinus = () => {
-        if (num === 0) {
+        if (num === 1) {
+            setNum(1);
+        } else if (num === 0) {
             setNum(0);
         } else {
             let newNum = num - 1;
@@ -44,8 +46,9 @@ const ProductInfo = () => {
         };
         fetchData();
     }, [id]);
+
     const addToCart = async () => {
-        if (info?.quantity > 0) {
+        if (info?.quantity > 0 && num <= info?.quantity) {
             try {
                 await axios.put(`cart/update/add/${user._id}`, {
                     id: id,
@@ -59,7 +62,7 @@ const ProductInfo = () => {
                 console.log(err.message);
             }
         } else {
-            toast.error('Sản phẩm đã hết hàng');
+            toast.error('Không đủ sản phẩm để đặt hàng');
         }
     };
     // console.log(info);
