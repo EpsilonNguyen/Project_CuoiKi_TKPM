@@ -136,7 +136,7 @@ const Admin = () => {
                     <div className="ml-8 mr-16 mt-4 shadow-xl">
                         {label === 'listShoe' && <SliderProduct />}
                         {label === 'user' && <TableUser />}
-                        {label === 'shoe' && <AddShoe />}
+                        {label === 'shoe' && <AddShoe setLabel={setLabel} />}
                     </div>
                 </div>
             </div>

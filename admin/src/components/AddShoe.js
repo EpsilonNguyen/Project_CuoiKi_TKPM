@@ -3,7 +3,7 @@ import { TbShoe } from 'react-icons/tb';
 import { toast } from 'react-toastify';
 import axios from '../hooks/axios';
 
-const AddShoe = () => {
+const AddShoe = ({ setLabel }) => {
     const [image, setImage] = useState(null);
     // const [size, setSize] = useState(0);
     const [data, setData] = useState({
@@ -34,7 +34,7 @@ const AddShoe = () => {
             const newSelectedSizes = selectedSizes.filter((s) => s !== sizes);
             setSelectedSizes(newSelectedSizes);
             setData({ ...data, size: newSelectedSizes });
-        } else if (selectedSizes.length < 12) {
+        } else if (selectedSizes.length < 11) {
             // nếu size chưa được chọn và số lượng size đã chọn < 3, ta sẽ thêm size vào mảng selectedSizes và cập nhật lại data.size
             const newSelectedSizes = [...selectedSizes, sizes];
             setSelectedSizes(newSelectedSizes);
@@ -61,6 +61,8 @@ const AddShoe = () => {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
+                toast.success('Thêm sản phẩm thành công');
+                setLabel('listShoe');
             } catch (err) {
                 console.log(err.message);
             }
