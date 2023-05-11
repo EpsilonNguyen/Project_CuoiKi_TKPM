@@ -4,6 +4,7 @@ import axios from '../hooks/axios';
 
 const AddShoe = () => {
     const [image, setImage] = useState(null);
+    const [size, setSize] = useState(0);
     const [data, setData] = useState({
         name: '',
         description: '',
@@ -28,6 +29,7 @@ const AddShoe = () => {
     };
     const [selectedSizes, setSelectedSizes] = useState([]);
     const handleSizeClick = (sizes) => {
+        setSize(sizes);
         if (selectedSizes.includes(sizes)) {
             const newSelectedSizes = selectedSizes.filter((s) => s !== sizes);
             setSelectedSizes(newSelectedSizes);
@@ -141,38 +143,48 @@ const AddShoe = () => {
                         type="button"
                         value="32"
                         onClick={() => handleSizeClick(32)}
-                        className="rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        className={size === 32 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
+                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        }
                     />
                     <input
                         type="button"
                         value="33"
                         onClick={() => handleSizeClick(33)}
-                        className="rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        className={size === 33 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
+                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        }
                     />
                     <input
                         type="button"
                         value="34"
                         onClick={() => handleSizeClick(34)}
-                        className="rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        className={size === 34 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
+                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        }
                     />
                     <input
                         type="button"
                         value="35"
                         onClick={() => handleSizeClick(35)}
-                        className="rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        className={size === 35 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
+                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        }
                     />
                     <input
                         type="button"
                         value="36"
                         onClick={() => handleSizeClick(36)}
-                        className="rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        className={size === 36 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
+                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
+                        }
                     />
                 </div>
             </div>
             <button
                 onClick={handleSubmit}
                 type="button"
-                className="flex justify-center gap-3 rounded-2xl bg-teal-400 py-1 px-2 text-white w-[180px] mx-auto mb-3"
+                className="flex justify-center gap-3 rounded-2xl bg-teal-400 py-1 px-2 text-white w-[180px] mx-auto mb-3 hover:scale-110"
             >
                 <TbShoe size={25} />
                 <span>Add Shoe</span>
