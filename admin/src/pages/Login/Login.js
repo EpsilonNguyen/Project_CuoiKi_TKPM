@@ -6,6 +6,10 @@ import axios from '../../hooks/axios';
 
 const Login = () => {
     const history = useHistory();
+    const { user } = useContext(AuthContext);
+    if (user !== null) {
+        history.push('/admin');
+    }
     const { dispatch } = useContext(AuthContext);
 
     const [empty, setEmpty] = useState({
