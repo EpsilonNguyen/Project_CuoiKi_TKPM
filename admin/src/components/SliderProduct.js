@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
-import shoe from '../images/shoe.jpg';
+import DeleteButton from './DeleteButton';
 import axios from '../hooks/axios';
 
 const SliderProduct = () => {
     const [shoe, setShoe] = useState();
+    const [hover, setHover] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [totalSlides, setTotalSlides] = useState();
     const [currentRow, setCurrentRow] = useState(0);
@@ -60,8 +61,15 @@ const SliderProduct = () => {
                                     {items &&
                                         items.map((item) => (
                                             <div className="border-2 w-56">
-                                                <img
-                                                    className="h-48 w-56 border-b-2 hover:scale-105 hover:border-2 cursor-pointer"
+                                                {hover === true &&
+                                                    <div className='absolute py-1 px-3 bg-white shadow-md text-xl hover:scale-110 hover:font-bold text-red-500'>
+                                                        <button type="button">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                }
+                                                <img onClick={() => { setHover(!hover) }}
+                                                    className="h-48 w-56 border-b-2 hover:border-2 cursor-pointer"
                                                     src={item.images[0]}
                                                     alt="shoe"
                                                 />
