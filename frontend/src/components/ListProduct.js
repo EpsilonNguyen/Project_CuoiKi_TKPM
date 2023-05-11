@@ -7,6 +7,10 @@ const ListProduct = ({ count, max, sort }) => {
     const [item, setItem] = useState();
     const [currentMax, setCurrentMax] = useState(null);
     const history = useHistory();
+    const [totalPage, setTotalPage] = useState();
+    const [currentRow, setCurrentRow] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [nextRow, setNextRow] = useState(2);
     useEffect(() => {
         const fetchData = async () => {
             let apiUrl = 'shoe/all/item';
@@ -14,6 +18,7 @@ const ListProduct = ({ count, max, sort }) => {
                 apiUrl = `shoe/get/price?minPrice=0&maxPrice=${currentMax}`;
             }
             const { data } = await axios.get(apiUrl);
+            setTotalPage(Math.ceil(data.length / 10));
             const itemData = data.data || data;
             if (sort === 'name') {
                 itemData.sort((a, b) => a.name.localeCompare(b.name));
@@ -24,7 +29,7 @@ const ListProduct = ({ count, max, sort }) => {
         };
         fetchData();
     }, [currentMax, max]);
-
+    console.log(totalPage);
     useEffect(() => {
         if (max !== currentMax) {
             setCurrentMax(max);
@@ -43,9 +48,15 @@ const ListProduct = ({ count, max, sort }) => {
 
     const maxRows = Math.ceil(count / 5);
     const itemsInRows = item ? splitItems(item, 5) : [];
+    const handleMove = (id) => {
+        setCurrentPage(id);
+        setCurrentRow((id - 1) * 2);
+        setNextRow(id * 2);
+    };
+
     return (
         <>
-            {itemsInRows.slice(0, maxRows).map((items, index) => (
+            {itemsInRows.slice(currentRow, nextRow).map((items, index) => (
                 <div key={index} className="flex mt-5">
                     {items &&
                         items.map((item) => (
@@ -59,6 +70,11 @@ const ListProduct = ({ count, max, sort }) => {
                         ))}
                 </div>
             ))}
+            <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200">
+                {Array.from({ length: totalPage }).map((_, Index) => (
+                    <span onClick={() => handleMove(Index + 1)}>{Index + 1}</span>
+                ))}
+            </div>
         </>
     );
 };

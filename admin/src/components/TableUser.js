@@ -3,9 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { AiOutlineLock } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import axios from '../hooks/axios';
+import { toast } from 'react-toastify';
 
 const TableUser = () => {
     const [info, setInfo] = useState();
+    const [load, setLoad] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,20 +15,34 @@ const TableUser = () => {
             setInfo(data.data);
         };
         fetchData();
-    }, []);
+    }, [load]);
 
     const handleDelete = async (id) => {
         try {
             await axios.delete(`user/delete/${id}`);
+            toast.success('Xóa user thành công');
+            setLoad((prev) => !prev);
         } catch (err) {
             console.log(err.message);
         }
     };
-    const handleLock = async (id) => {
-        try {
-            await axios.delete(`user/lock/${id}`);
-        } catch (err) {
-            console.log(err.message);
+    const handleLock = async (id, lock) => {
+        if (!lock) {
+            try {
+                await axios.put(`user/lock/${id}`);
+                toast.success('Khóa user thành công');
+                setLoad((prev) => !prev);
+            } catch (err) {
+                console.log(err.message);
+            }
+        } else {
+            try {
+                await axios.put(`user/unlock/${id}`);
+                toast.success('Mở khóa user thành công');
+                setLoad((prev) => !prev);
+            } catch (err) {
+                console.log(err.message);
+            }
         }
     };
     const data = useMemo(() => {
@@ -56,7 +72,7 @@ const TableUser = () => {
                     />
                     <AiOutlineLock
                         onClick={() => {
-                            handleLock(item._id);
+                            handleLock(item._id, item.isLocked);
                         }}
                         size={25}
                         className="cursor-pointer"

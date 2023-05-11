@@ -248,16 +248,10 @@ export const updateShoe = async (req, res, next) => {
 
 export const createShoe = async (req, res, next) => {
     try {
-        console.log('tet2', req?.file, req?.files);
-
         // Lấy link ảnh từ Cloudinary (đã upload trc đó)
-        // console.log(req.files);
-        console.log('data', req.body);
-        // req.body.images = req.files.map((file) => file.path)
-        console.log(req.files);
         req.body.images = req.files.map((file) => file.path);
         const newShoe = new Shoe(req.body);
-        console.log(req.body);
+
         const saveShoe = await newShoe.save();
 
         res.status(200).json(saveShoe);
