@@ -117,6 +117,7 @@ const Cart = () => {
             console.log(err.message);
         }
     };
+    console.log(cart);
     return (
         <div>
             <ModalPayment modalIsOpen={modalIsOpen} closeModal={closeModal} />
