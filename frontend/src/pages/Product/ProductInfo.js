@@ -57,6 +57,7 @@ const ProductInfo = () => {
                     id: id,
                     name: info?.name,
                     quantity: num,
+                    image: info?.images[0],
                     price: info?.price,
                     size: size,
                 });
