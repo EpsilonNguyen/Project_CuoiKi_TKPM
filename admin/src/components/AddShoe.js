@@ -34,7 +34,7 @@ const AddShoe = () => {
             const newSelectedSizes = selectedSizes.filter((s) => s !== sizes);
             setSelectedSizes(newSelectedSizes);
             setData({ ...data, size: newSelectedSizes });
-        } else if (selectedSizes.length < 3) {
+        } else if (selectedSizes.length < 12) {
             // nếu size chưa được chọn và số lượng size đã chọn < 3, ta sẽ thêm size vào mảng selectedSizes và cập nhật lại data.size
             const newSelectedSizes = [...selectedSizes, sizes];
             setSelectedSizes(newSelectedSizes);

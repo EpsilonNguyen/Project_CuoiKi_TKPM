@@ -211,10 +211,10 @@ export const deleteShoe = async (req, res, next) => {
         const shoeInfo = await Shoe.findById(shoeID);
 
         // Code để lấy public_id phục vụ cho delete image trên cloudinary
-        const publics_id = shoeInfo.images.map((path) => path.split('/').slice(-2).join('/').replace('.jpg', ''));
-        const result = await cloudinary.api.delete_resources(publics_id);
+        // const publics_id = shoeInfo.images.map((path) => path.split('/').slice(-2).join('/').replace('.jpg', ''));
+        // const result = await cloudinary.api.delete_resources(publics_id);
 
-        if (Object.values(result.deleted)[0] === 'not_found') return next(createError(404, 'Xóa Hình ảnh thất bại!'));
+        // if (Object.values(result.deleted)[0] === 'not_found') return next(createError(404, 'Xóa Hình ảnh thất bại!'));
 
         await Promise.all(shoeInfo.reviews.map((review) => Review.findByIdAndDelete(review)));
 
