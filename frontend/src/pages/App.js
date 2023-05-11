@@ -6,6 +6,7 @@ import ProductItem from './Product/ProductItem';
 import ProductInfo from './Product/ProductInfo';
 import Cart from './Cart/Cart';
 import Contact from './Contact/Contact';
+import Profile from './Profile/Profile';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -39,6 +40,9 @@ function App() {
                 </Route>
                 <Route path="/contact">
                     <Contact />
+                </Route>
+                <Route path="/profile">
+                    <Profile />
                 </Route>
             </Switch>
         </BrowserRouter>
