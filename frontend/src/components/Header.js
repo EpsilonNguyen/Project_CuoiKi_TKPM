@@ -42,31 +42,33 @@ const Header = () => {
             {isOpenDrop === true && <DropdownProfile />}
             <div className="py-3 flex w-full">
                 <div className="ml-auto mr-32 flex gap-8">
-                    <span onClick={handleLogin} className="cursor-pointer flex gap-3">
-                        <div className="flex gap-3 hover:text-blue-300">
+                    <div className="cursor-pointer flex gap-3">
+                        <div onClick={handleLogin} className="flex gap-3 hover:text-blue-300">
                             <FaUser size={20} />
                             <span>My Profile</span>
                         </div>
-                        {isOpenDrop === false && (
-                            <IoMdArrowDropdown
-                                size={25}
-                                onClick={() => {
-                                    setIsOpenDrop(true);
-                                }}
-                            />
-                        )}
-                        {isOpenDrop === true && (
-                            <IoMdArrowDropdown
-                                size={25}
-                                className="rotate-180"
-                                onClick={() => {
-                                    setIsOpenDrop(false);
-                                }}
-                            />
-                        )}
-                    </span>
+                        <span>
+                            {isOpenDrop === false && (
+                                <IoMdArrowDropdown
+                                    size={25}
+                                    onClick={() => {
+                                        setIsOpenDrop(true);
+                                    }}
+                                />
+                            )}
+                            {isOpenDrop === true && (
+                                <IoMdArrowDropdown
+                                    size={25}
+                                    className="rotate-180"
+                                    onClick={() => {
+                                        setIsOpenDrop(false);
+                                    }}
+                                />
+                            )}
+                        </span>
+                    </div>
                     <span onClick={handleCart} className="cursor-pointer hover:text-blue-300">
-                        <span className="absolute top-1 right-[550px] text-red-500">{count}</span>
+                        <span className="absolute top-1 right-[196px] text-red-500 font-bold">{count}</span>
                         <IoIosCart size={25} />
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">${info}</span>

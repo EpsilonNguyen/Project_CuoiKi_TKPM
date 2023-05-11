@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from '../../hooks/axios';
+import { AiFillEye } from 'react-icons/ai';
 
 const Register = () => {
     const history = useHistory();
@@ -28,7 +29,7 @@ const Register = () => {
                 return false;
             }
             return true;
-        } catch (error) {}
+        } catch (error) { }
     }
     async function register() {
         try {
@@ -37,7 +38,7 @@ const Register = () => {
                 return false;
             }
             return true;
-        } catch (error) {}
+        } catch (error) { }
     }
 
     const handleRegister = async () => {
@@ -128,6 +129,7 @@ const Register = () => {
                             onChange={handleChange}
                             placeholder="**********"
                         />
+                        <AiFillEye size={20} className='absolute left-[500px] top-[380px] opacity-50 cursor-pointer hover:opacity-100' />
                     </div>
                     <div className="flex flex-col">
                         <label className="font-bold">Nhập lại mật khẩu</label>
@@ -138,6 +140,7 @@ const Register = () => {
                             type="password"
                             placeholder="**********"
                         />
+                        <AiFillEye size={20} className='absolute left-[500px] top-[472px] opacity-50 cursor-pointer hover:opacity-100' />
                     </div>
                     <div className="flex px-6">
                         <div>

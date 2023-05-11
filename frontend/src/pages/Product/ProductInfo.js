@@ -71,7 +71,20 @@ const ProductInfo = () => {
             <Header />
             <div className="flex gap-8 mb-5">
                 <div className="w-56 ml-12">
-                    <img className="h-48 w-56 shadow-xl" src={info?.images[0]} alt="shoe" />
+                    <div>
+                        <img className="h-48 w-56 shadow-xl" src={info?.images[0]} alt="shoe" />
+                    </div>
+                    <div className='flex gap-1 mt-8'>
+                        <div>
+                            <img className="h-24 w-40 border-2" src={info?.images[0]} alt="shoe" />
+                        </div>
+                        <div>
+                            <img className="h-24 w-40 border-2" src={info?.images[0]} alt="shoe" />
+                        </div>
+                        <div>
+                            <img className="h-24 w-40 border-2" src={info?.images[0]} alt="shoe" />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="w-[400px] flex flex-col gap-5">
@@ -124,7 +137,7 @@ const ProductInfo = () => {
                                 +
                             </button>
                         </div>
-                        <button id="addToCart" onClick={addToCart} className="bg-blue-200 h-8 w-32 ml-auto">
+                        <button id="addToCart" onClick={addToCart} className="bg-blue-200 h-8 w-32 ml-auto hover:font-bold hover:scale-110">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                             <span className="ml-2">Add To Cart</span>
                         </button>
@@ -133,20 +146,16 @@ const ProductInfo = () => {
 
                 <div className="border-2 border-gray-300 w-[750px]">
                     <Tabs>
-                        <TabList>
+                        <TabList className='font-bold'>
                             <Tab>Product Information</Tab>
                             <Tab>Reviews</Tab>
-                            <Tab>Another tab</Tab>
                         </TabList>
 
-                        <TabPanel>
+                        <TabPanel className='px-3 py-1 border-t-2 border-gray-400'>
                             <h2>{info?.description}</h2>
                         </TabPanel>
                         <TabPanel>
                             <h2>{info?.reviews}</h2>
-                        </TabPanel>
-                        <TabPanel>
-                            <h2>Any content 3</h2>
                         </TabPanel>
                     </Tabs>
                 </div>

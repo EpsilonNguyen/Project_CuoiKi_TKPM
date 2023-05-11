@@ -42,12 +42,12 @@ const BestSeller = () => {
                         <div
                             key={item._id}
                             onClick={() => productInfo(item._id)}
-                            className="w-48 border-2 border-gray-200"
+                            className="w-48 cursor-pointer"
                         >
-                            <img className="h-48" src={item.images[0]} alt="shoe" />
-                            <div className="text-center bg-gray-100">
-                                <span>{item.name}</span>
-                                <span> ${item.price}</span>
+                            <img className="h-48 hover:scale-110 hover:shadow-xl" src={item.images[0]} alt="shoe" />
+                            <div className="text-center bg-gray-100 hover:font-bold hover:text-teal-400 py-2">
+                                <div>{item.name}</div>
+                                <div> ${item.price}</div>
                             </div>
                         </div>
                     ))}

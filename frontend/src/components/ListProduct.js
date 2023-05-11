@@ -50,10 +50,10 @@ const ListProduct = ({ count, max, sort }) => {
                     {items &&
                         items.map((item) => (
                             <div key={item._id} className="w-48 mr-12" onClick={() => productDetail(item._id)}>
-                                <img className="h-48" src={item.images[0]} alt="shoe" />
-                                <div className="py-3 text-center border-2 border-gray-200 bg-gray-100">
-                                    <span>{item.name}</span>
-                                    <span> ${item.price}</span>
+                                <img className="h-48 hover:scale-110 hover:shadow-xl" src={item.images[0]} alt="shoe" />
+                                <div className="py-3 text-center border-2 border-gray-200 bg-gray-100 hover:font-bold hover:text-teal-400">
+                                    <div>{item.name}</div>
+                                    <div> ${item.price}</div>
                                 </div>
                             </div>
                         ))}
