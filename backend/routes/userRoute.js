@@ -31,7 +31,6 @@ router.put('/lock/:userID', lockUser);
 // UNLOCK USER
 router.put('/unlock/:userID', unlockUser);
 
-// UPDATE USER
 router.put('/update/:id', uploadCloud.single('avatar'), updateUser);
 
 // UPLOAD AVATAR
