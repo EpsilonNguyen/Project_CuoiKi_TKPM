@@ -21,7 +21,7 @@ router.put("/lock/:userID", lockUser);
 router.put("/unlock/:userID", unlockUser);
 
 // UPDATE USER
-router.put("/update/:id", verifyToken, verifyUser, uploadCloud.single("avatar"), updateUser);
+router.put("/update/:id", verifyToken, verifyUser, updateUser);
 
 // UPLOAD AVATAR
 router.put("/uploadAvatar/:id", uploadCloud.single("avatar"), uploadAvatar);

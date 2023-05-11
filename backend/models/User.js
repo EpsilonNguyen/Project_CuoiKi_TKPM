@@ -19,10 +19,8 @@ const UserScheme = new mongoose.Schema({
         enum: ["Male", "Female"],
         require: true
     },
-    shipAddress: {
-        address: { type: String },
-        city: { type: String },
-        province: { type: String },
+    address: {
+        type: String
     },
     birthDay: {
         type: Date,
