@@ -17,8 +17,13 @@ const Login = () => {
         email: '',
         password: '',
     });
+    const [check, setCheck] = useState(false);
     const handleChange = (e) => {
         setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    };
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
     const checkForm = () => {
         let flag = true;
@@ -34,6 +39,8 @@ const Login = () => {
                 email: true,
             }));
             flag = false;
+        } else if (check === true) {
+            flag = false;
         }
         if (!flag) return flag;
         setEmpty({
@@ -42,13 +49,19 @@ const Login = () => {
         });
         return flag;
     };
+    const handleCheck = () => {
+        if (!isValidEmail(credentials.email)) {
+            setCheck(true);
+            toast.error('Vui lòng nhập đúng định dạng email');
+        }
+    };
     const handleLogin = async (e) => {
         e.preventDefault();
         if (checkForm() === false) return;
         try {
             const { data } = await axios.post('auth/login', credentials);
             // Cookies.set("userInfo", JSON.stringify(data));
-            if (data?.isBlocked) {
+            if (data?.isLocked) {
                 toast.error('Tài khoản của bạn bị khóa, vui lòng liên hệ với quản trị');
                 return;
             }
@@ -70,6 +83,7 @@ const Login = () => {
                             type="text"
                             placeholder="abc@gmail.com"
                             id="email"
+                            onBlur={handleCheck}
                             onChange={(e) => handleChange(e)}
                         />
                     </div>
@@ -83,13 +97,7 @@ const Login = () => {
                             onChange={(e) => handleChange(e)}
                         />
                     </div>
-                    <div className="flex">
-                        <div>
-                            <input type="checkbox" value="" />
-                            <label> Nhớ mật khẩu</label>
-                        </div>
-                        <span className="ml-auto font-bold cursor-pointer">Quên mật khẩu</span>
-                    </div>
+
                     <button
                         onClick={(e) => handleLogin(e)}
                         className="item-center bg-black text-white py-2 rounded-md"

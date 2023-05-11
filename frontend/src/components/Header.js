@@ -12,17 +12,11 @@ const Header = () => {
     const [isOpenDrop, setIsOpenDrop] = useState(false);
     const { user, dispatch } = useContext(AuthContext);
     const [info, setInfo] = useState();
-    const [money, setMoney] = useState();
+    const [count, setCount] = useState();
     const handleLogin = () => {
         if (user !== null) {
             history.push('/');
         } else history.push('/login');
-    };
-    const payMoney = async () => {
-        try {
-            const { data } = await axios.post(`payment/${user._id}?totalPrice=${money}`);
-            window.open(`${data.link}`, '_blank');
-        } catch (err) { }
     };
     useEffect(() => {
         const fetchData = async () => {
@@ -31,6 +25,13 @@ const Header = () => {
         };
         fetchData();
     }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data } = await axios.get(`cart/get/user/${user._id}`);
+            setCount(data.shoeItem.length);
+        };
+        fetchData();
+    }, [count]);
     const handleCart = () => {
         if (user !== null) {
             history.push('/cart');
@@ -40,32 +41,35 @@ const Header = () => {
         <div>
             {isOpenDrop === true && <DropdownProfile />}
             <div className="py-3 flex w-full">
-                <div>
-                    <span className="ml-20 mr-5">EN</span>
-                    <span>USD</span>
-                </div>
                 <div className="ml-auto mr-32 flex gap-8">
                     <span onClick={handleLogin} className="cursor-pointer flex gap-3">
-                        <div className='flex gap-3 hover:text-blue-300'>
+                        <div className="flex gap-3 hover:text-blue-300">
                             <FaUser size={20} />
                             <span>My Profile</span>
                         </div>
-                        {isOpenDrop === false && <IoMdArrowDropdown size={25} onClick={() => { setIsOpenDrop(true) }} />}
-                        {isOpenDrop === true && <IoMdArrowDropdown size={25} className='rotate-180' onClick={() => { setIsOpenDrop(false) }} />}
+                        {isOpenDrop === false && (
+                            <IoMdArrowDropdown
+                                size={25}
+                                onClick={() => {
+                                    setIsOpenDrop(true);
+                                }}
+                            />
+                        )}
+                        {isOpenDrop === true && (
+                            <IoMdArrowDropdown
+                                size={25}
+                                className="rotate-180"
+                                onClick={() => {
+                                    setIsOpenDrop(false);
+                                }}
+                            />
+                        )}
                     </span>
                     <span onClick={handleCart} className="cursor-pointer hover:text-blue-300">
-                        <span className='absolute top-1 right-[550px] text-red-500'>2</span>
+                        <span className="absolute top-1 right-[550px] text-red-500">{count}</span>
                         <IoIosCart size={25} />
                     </span>
-                    <span className="cursor-pointer hover:text-blue-300">Items</span>
                     <span className="cursor-pointer hover:text-blue-300">${info}</span>
-                    <span className="cursor-pointer hover:text-blue-300" onClick={payMoney}>
-                        pay
-                    </span>
-                    <input type="number" onChange={(e) => setMoney(e.target.value)} />
-                    <span className="cursor-pointer hover:text-blue-300">
-                        <i className="fa fa-search" aria-hidden="true"></i>
-                    </span>
                 </div>
             </div>
 
