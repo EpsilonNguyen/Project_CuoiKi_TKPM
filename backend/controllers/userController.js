@@ -4,6 +4,24 @@ import bcrypt from "bcryptjs";
 import cloudinary from "../utils/cloudinary.js";
 import Review from "../models/Review.js";
 import Shoe from "../models/Shoe.js";
+import { truncate } from "fs";
+
+export const getUserByEmail = async (req, res, next) => {
+    try {
+        const userByEmail = await User.findOne({ email: req.query.email });
+        if (!userByEmail) return res.status(200).send({
+            success: false,
+            message: "Không tìm thấy!"
+        })
+
+        res.status(200).send({
+            success: true,
+            data: userByEmail
+        })
+    } catch (err) {
+        next(err);
+    }
+}
 
 export const unlockUser = async (req, res, next) => {
     try {

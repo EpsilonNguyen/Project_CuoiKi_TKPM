@@ -10,9 +10,9 @@ const Register = () => {
     const [info, setInfo] = useState({
         email: '',
         fullname: '',
+        gender: 'Male',
         password: '',
         rePassword: '',
-        gender: 'male',
     });
 
     const handleChange = (e) => {
@@ -24,11 +24,11 @@ const Register = () => {
 
     async function isExistedUser() {
         try {
-            const { data: user } = await axios.get(`/user/get-profile?email=${info.email}`);
-            if (user === null) {
-                return false;
+            const { data } = await axios.get(`/user/get-profile?email=${info.email}`);
+            if (data.success) {
+                return true;
             }
-            return true;
+            return false;
         } catch (error) { }
     }
     async function register() {
@@ -72,8 +72,8 @@ const Register = () => {
         }
     };
     const checkPassword = () => {
-        if (info.password.length < 6 || info.rePassword.length < 6) {
-            toast.error('Mật khẩu ít nhất 6 ký tự');
+        if (info.password.length < 3 || info.rePassword.length < 3) {
+            toast.error('Mật khẩu ít nhất 3 ký tự');
             return false;
         }
         if (info.password !== info.rePassword) {
@@ -149,7 +149,7 @@ const Register = () => {
                                 type="checkbox"
                                 value="male"
                                 onChange={handleChecked}
-                                checked={info.gender === 'male'}
+                                checked={info.gender === 'Male'}
                             />
                             <label> Nam</label>
                         </div>
@@ -159,7 +159,7 @@ const Register = () => {
                                 type="checkbox"
                                 value="female"
                                 onChange={handleChecked}
-                                checked={info.gender === 'female'}
+                                checked={info.gender === 'Female'}
                             />
                             <label> Nữ</label>
                         </div>

@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUser, getAllUser, lockUser, profileUser, unlockUser, updateUser, uploadAvatar } from "../controllers/userController.js";
+import { deleteUser, getAllUser, getUserByEmail, lockUser, profileUser, unlockUser, updateUser, uploadAvatar } from "../controllers/userController.js";
 import uploadCloud from "../utils/multerMiddleware.js";
 import { verifyToken, verifyUser } from "../utils/verify.js";
 
@@ -7,6 +7,9 @@ const router = express.Router();
 
 // GET PROFILE USER
 router.get("/profile/:id", profileUser);
+
+// GET PROFILE USER
+router.get("/get-profile", getUserByEmail);
 
 // GET ALL USER
 router.get("/all", getAllUser);
