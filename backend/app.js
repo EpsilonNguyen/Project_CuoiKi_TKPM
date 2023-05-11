@@ -1,4 +1,5 @@
 import express from 'express';
+import dbSingleton from './designpattern/databaseSingleton.js';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoute from './routes/authRoute.js';
@@ -9,33 +10,39 @@ import cartRoute from './routes/cartRoute.js';
 import paymentRoute from './routes/paymentRoute.js';
 import checkoutRoute from './routes/checkoutRoute.js';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import cors from 'cors';
+// import session from 'express-session';
 
 const app = express();
 dotenv.config();
 
 // SESSION
-app.use(
-    session({
-        secret: 'my-secret',
-        resave: false,
-        saveUninitialized: true,
-    }),
-);
+// app.use(
+//     session({
+//         secret: 'my-secret',
+//         resave: false,
+//         saveUninitialized: true,
+//     }),
+// );
 
-const connect = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO);
-        console.log('Connected To MongoDB!');
-    } catch (err) {
-        throw err;
-    }
-};
+dbSingleton.init();
 
-mongoose.connection.on('disconnected', () => {
+dbSingleton.mongoose.connection.on('disconnected', () => {
     console.log('MongoDB Disconnected!');
 });
+
+// const connect = async () => {
+//     try {
+//         await mongoose.connect(process.env.MONGO);
+//         console.log('Connected To MongoDB!');
+//     } catch (err) {
+//         throw err;
+//     }
+// };
+
+// mongoose.connection.on('disconnected', () => {
+//     console.log('MongoDB Disconnected!');
+// });
 
 //middleware
 app.use(cookieParser());
@@ -71,6 +78,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(8800, () => {
-    connect();
+    // connect();
     console.log('Connected To Database!');
 });

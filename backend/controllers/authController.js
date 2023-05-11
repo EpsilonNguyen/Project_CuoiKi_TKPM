@@ -4,13 +4,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import moment from "moment";
 import Cart from "../models/Cart.js";
+import { findUserByEmail, createCart, createUser } from "../designpattern/authRepository.js";
 
 export const register = async (req, res, next) => {
     try {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
 
-        const existUser = await User.findOne({ email: req.body.email });
+        const existUser = await findUserByEmail(req.body.email);
         if (existUser) {
             return res.status(404).send({
                 success: false,
@@ -25,7 +26,8 @@ export const register = async (req, res, next) => {
             password: hash,
         });
 
-        const saveUser = await newUser.save();
+        // const saveUser = await newUser.save();
+        const saveUser = await createUser(newUser);
         if (!saveUser) {
             return res.status(404).send({
                 success: false,
@@ -34,7 +36,8 @@ export const register = async (req, res, next) => {
         }
 
         const newCart = new Cart({ user: saveUser._id });
-        await newCart.save();
+        // await newCart.save();
+        await createCart(newCart);
 
         res.status(200).send({
             success: true,
@@ -48,7 +51,7 @@ export const register = async (req, res, next) => {
 
 export const loginAdmin = async (req, res, next) => {
     try {
-        const resultUser = await User.findOne({ email: req.body.email });
+        const resultUser = await findUserByEmail(req.body.email);
         if (!resultUser) return next(createError(404, "User Không Tồn Tại!"));
 
         const isLocking = resultUser.isLocked;
@@ -82,7 +85,7 @@ export const loginAdmin = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
     try {
-        const resultUser = await User.findOne({ email: req.body.email });
+        const resultUser = await findUserByEmail(req.body.email);
         if (!resultUser) return next(createError(404, "User Không Tồn Tại!"));
 
         const isLocking = resultUser.isLocked;
