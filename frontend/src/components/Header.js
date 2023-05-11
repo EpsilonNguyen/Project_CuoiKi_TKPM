@@ -2,9 +2,14 @@ import axios from '../hooks/axios';
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import { IoMdArrowDropdown } from 'react-icons/io';
+import { FaUser } from 'react-icons/fa';
+import { IoIosCart } from 'react-icons/io';
+import DropdownProfile from './DropdownProfile';
 
 const Header = () => {
     const history = useHistory();
+    const [isOpenDrop, setIsOpenDrop] = useState(false);
     const { user, dispatch } = useContext(AuthContext);
     const [info, setInfo] = useState();
     const [money, setMoney] = useState();
@@ -17,7 +22,7 @@ const Header = () => {
         try {
             const { data } = await axios.post(`payment/${user._id}?totalPrice=${money}`);
             window.open(`${data.link}`, '_blank');
-        } catch (err) {}
+        } catch (err) { }
     };
     useEffect(() => {
         const fetchData = async () => {
@@ -33,17 +38,24 @@ const Header = () => {
     };
     return (
         <div>
+            {isOpenDrop === true && <DropdownProfile />}
             <div className="py-3 flex w-full">
                 <div>
                     <span className="ml-20 mr-5">EN</span>
                     <span>USD</span>
                 </div>
                 <div className="ml-auto mr-32 flex gap-8">
-                    <span onClick={handleLogin} className="cursor-pointer hover:text-blue-300">
-                        <i className="fa fa-user mr-2" aria-hidden="true"></i>My profile
+                    <span onClick={handleLogin} className="cursor-pointer flex gap-3">
+                        <div className='flex gap-3 hover:text-blue-300'>
+                            <FaUser size={20} />
+                            <span>My Profile</span>
+                        </div>
+                        {isOpenDrop === false && <IoMdArrowDropdown size={25} onClick={() => { setIsOpenDrop(true) }} />}
+                        {isOpenDrop === true && <IoMdArrowDropdown size={25} className='rotate-180' onClick={() => { setIsOpenDrop(false) }} />}
                     </span>
                     <span onClick={handleCart} className="cursor-pointer hover:text-blue-300">
-                        <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                        <span className='absolute top-1 right-[550px] text-red-500'>2</span>
+                        <IoIosCart size={25} />
                     </span>
                     <span className="cursor-pointer hover:text-blue-300">Items</span>
                     <span className="cursor-pointer hover:text-blue-300">${info}</span>
