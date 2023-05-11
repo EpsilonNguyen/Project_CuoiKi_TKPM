@@ -6,14 +6,14 @@ const DropdownProfile = () => {
     const history = useHistory();
 
     return (
-        <div className="absolute left-[760px] top-10 border-2 w-40 bg-white">
+        <div className="absolute right-[270px] top-10 shadow-md w-40 bg-white">
             <div onClick={() => { history.push("/profile") }}
-                className='flex gap-4 pl-5 py-2 border-b-2 cursor-pointer hover:text-white hover:bg-blue-300'>
+                className='flex gap-4 pl-5 py-2 border-b-2 cursor-pointer hover:text-white hover:bg-blue-300 hover:font-bold'>
                 <BsPencilFill size={20} />
                 <span>Edit Profile</span>
             </div>
             <div
-                className='flex gap-4 pl-5 py-2 border-b-2 cursor-pointer hover:text-white hover:bg-blue-300'>
+                className='flex gap-4 pl-5 py-2 border-b-2 cursor-pointer hover:text-white hover:bg-blue-300 hover:font-bold'>
                 <BiLogOut size={25} />
                 <span>Logout</span>
             </div>

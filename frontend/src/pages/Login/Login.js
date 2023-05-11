@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from '../../hooks/axios';
 import { toast } from 'react-toastify';
+import { AiFillEye } from 'react-icons/ai';
 
 const Login = () => {
     const history = useHistory();
@@ -96,6 +97,7 @@ const Login = () => {
                             id="password"
                             onChange={(e) => handleChange(e)}
                         />
+                        <AiFillEye size={20} className='absolute left-[500px] top-[335px] opacity-50 cursor-pointer hover:opacity-100' />
                     </div>
 
                     <button
