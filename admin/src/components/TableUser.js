@@ -27,7 +27,7 @@ const TableUser = () => {
         }
     };
     const handleLock = async (id, lock) => {
-        if (lock) {
+        if (!lock) {
             try {
                 await axios.put(`user/lock/${id}`);
                 toast.success('Khóa user thành công');
@@ -72,7 +72,7 @@ const TableUser = () => {
                     />
                     <AiOutlineLock
                         onClick={() => {
-                            handleLock(item._id, item.lock);
+                            handleLock(item._id, item.isLocked);
                         }}
                         size={25}
                         className="cursor-pointer"
