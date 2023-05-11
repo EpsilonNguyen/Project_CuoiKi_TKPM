@@ -1,4 +1,3 @@
-
 import express from 'express';
 import {
     deleteUser,
@@ -13,7 +12,6 @@ import {
 import uploadCloud from '../utils/multerMiddleware.js';
 import { verifyToken, verifyUser } from '../utils/verify.js';
 
-
 const router = express.Router();
 
 // GET PROFILE USER
@@ -22,7 +20,7 @@ router.get('/profile/:id', profileUser);
 router.get('/get-profile', getUserByEmail);
 
 // GET PROFILE USER
-router.get("/get-profile", getUserByEmail);
+router.get('/get-profile', getUserByEmail);
 
 // GET ALL USER
 router.get('/all', getAllUser);

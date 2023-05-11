@@ -3,7 +3,6 @@ import shoe from '../images/shoe.jpg';
 import axios from '../hooks/axios';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
-
 const ListProduct = ({ max, sort }) => {
     const [paginate, setPaginate] = useState(0);
     const [item, setItem] = useState();
@@ -63,7 +62,11 @@ const ListProduct = ({ max, sort }) => {
                     {items &&
                         items.map((item) => (
                             <div key={item._id} className="w-48 mr-12" onClick={() => productDetail(item._id)}>
-                                <img className="h-48 hover:scale-110 hover:shadow-xl cursor-pointer" src={item.images[0]} alt="shoe" />
+                                <img
+                                    className="h-48 hover:scale-110 hover:shadow-xl cursor-pointer"
+                                    src={item.images[0]}
+                                    alt="shoe"
+                                />
                                 <div className="py-3 text-center border-2 border-gray-200 bg-gray-100 hover:font-bold hover:text-teal-400 cursor-pointer">
                                     <div>{item.name}</div>
                                     <div> ${item.price}</div>
@@ -74,7 +77,14 @@ const ListProduct = ({ max, sort }) => {
             ))}
             <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200 flex gap-1 justify-center">
                 {Array.from({ length: totalPage }).map((_, Index) => (
-                    <span className={paginate === Index ? "bg-blue-500 text-white font-bold px-2" : " hover:bg-gray-400 px-2"} onClick={() => handleMove(Index + 1)}>{Index + 1}</span>
+                    <span
+                        className={
+                            paginate === Index ? 'bg-blue-500 text-white font-bold px-2' : ' hover:bg-gray-400 px-2'
+                        }
+                        onClick={() => handleMove(Index + 1)}
+                    >
+                        {Index + 1}
+                    </span>
                 ))}
             </div>
         </>

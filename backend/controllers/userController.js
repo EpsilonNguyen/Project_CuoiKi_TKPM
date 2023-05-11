@@ -1,12 +1,10 @@
-
-import { createError } from "../utils/error.js";
-import User from "../models/User.js";
-import bcrypt from "bcryptjs";
-import cloudinary from "../utils/cloudinary.js";
-import Review from "../models/Review.js";
-import Shoe from "../models/Shoe.js";
-import { truncate } from "fs";
-
+import { createError } from '../utils/error.js';
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import cloudinary from '../utils/cloudinary.js';
+import Review from '../models/Review.js';
+import Shoe from '../models/Shoe.js';
+import { truncate } from 'fs';
 
 export const getUserByEmail = async (req, res, next) => {
     try {
@@ -25,7 +23,6 @@ export const getUserByEmail = async (req, res, next) => {
         next(err);
     }
 };
-
 
 export const unlockUser = async (req, res, next) => {
     try {
