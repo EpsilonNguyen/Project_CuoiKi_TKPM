@@ -54,7 +54,7 @@ const Login = () => {
         if (!isValidEmail(credentials.email)) {
             setCheck(true);
             toast.error('Vui lòng nhập đúng định dạng email');
-        }
+        } else setCheck(false);
     };
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -97,7 +97,10 @@ const Login = () => {
                             id="password"
                             onChange={(e) => handleChange(e)}
                         />
-                        <AiFillEye size={20} className='absolute left-[500px] top-[335px] opacity-50 cursor-pointer hover:opacity-100' />
+                        <AiFillEye
+                            size={20}
+                            className="absolute left-[500px] top-[335px] opacity-50 cursor-pointer hover:opacity-100"
+                        />
                     </div>
 
                     <button

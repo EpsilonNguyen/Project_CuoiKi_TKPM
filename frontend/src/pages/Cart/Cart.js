@@ -14,6 +14,7 @@ const Cart = () => {
     const [cartID, setCartID] = useState();
     const [info, setInfo] = useState();
     const [address, setAddress] = useState();
+    const [state, setState] = useState(false);
 
     function closeModal() {
         setIsOpen(false);
@@ -22,7 +23,8 @@ const Cart = () => {
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get(`user/profile/${user._id}`);
-            setInfo(data);
+            setInfo(data.data);
+            setAddress(data.data.address);
         };
         fetchData();
     }, []);
@@ -31,10 +33,9 @@ const Cart = () => {
             const { data } = await axios.get(`cart/get/user/${user._id}`);
             setCartID(data._id);
             setCart(data?.shoeItem);
-            setAddress(data?.shipAddress);
         };
         fetchData();
-    }, [user._id]);
+    }, [state]);
     const fetchData = async (id) => {
         try {
             const { data } = await axios.get(`shoe/${id}`);
@@ -89,8 +90,8 @@ const Cart = () => {
         (accumulate, currentValue) => accumulate + currentValue.price * currentValue.quantity,
         0,
     );
-
     const handleOnClickCheckOut = async () => {
+        console.log(totalPrice, address, cart);
         if (info?.wallet < totalPrice) {
             toast.error('Tiền không đủ để mua hàng');
         } else {
@@ -105,6 +106,15 @@ const Cart = () => {
             } catch (err) {
                 console.log(err.message);
             }
+        }
+    };
+    const handleDelete = async (id) => {
+        try {
+            await axios.put(`cart/update/delete/${cartID}/${id}`);
+            setState((prev) => !prev);
+            toast.success('Xóa giày khỏi giỏ hàng thành công');
+        } catch (err) {
+            console.log(err.message);
         }
     };
     return (
@@ -124,8 +134,9 @@ const Cart = () => {
 
                     {cart?.map((item) => (
                         <div key={item?._id} className="flex border-b-2 border-gray-200 py-6">
+                            <span onClick={() => handleDelete(item?.id)}>X</span>
                             <div className="ml-24 flex">
-                                <img className="h-20 w-24" src={shoe} alt="shoe" />
+                                <img className="h-20 w-24" src={item?.image} alt="shoe" />
                                 <span className="m-auto pl-5">{item?.name}</span>
                             </div>
                             <div className="ml-auto mr-16 flex">

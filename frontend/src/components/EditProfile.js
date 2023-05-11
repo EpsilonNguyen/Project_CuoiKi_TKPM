@@ -1,19 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import axios from '../hooks/axios';
+import { toast } from 'react-toastify';
 
 const EditProfile = () => {
     const [info, setInfo] = useState();
-    const [address, setAddress] = useState();
     const { user } = useContext(AuthContext);
+    const [image, setImage] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const { data } = await axios.get(`cart/get/user/${user._id}`);
-            setAddress(data.shipAddress);
-        };
-        fetchData();
-    }, [user._id]);
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get(`user/profile/${user._id}`);
@@ -21,21 +15,59 @@ const EditProfile = () => {
         };
         fetchData();
     }, [user._id]);
-    console.log(address);
     const handleChange = (e) => {
         setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    };
+    const handleFileChange = (event) => {
+        setImage(event.target.files[0]);
+    };
+    const handleFileChoose = () => {
+        document.getElementById('fileInput').click();
+    };
+    const handleSave = async () => {
+        try {
+            await axios.put(`user/update/${user._id}`, {
+                fullname: info?.fullname,
+                gender: info?.gender,
+                address: info?.address,
+            });
+            toast.success('Cập nhật user thành công');
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+    const handleUpload = async () => {
+        const formData = new FormData();
+        formData.append('avatar', image);
+        try {
+            await axios.put(`user/uploadAvatar/${user._id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            toast.success('Cập nhật Avartar thành công');
+        } catch (err) {
+            console.log(err.message);
+        }
     };
     return (
         <div className="flex flex-col gap-5">
             <div className="flex mt-8 mb-3">
                 <div className="font-bold text-3xl flex flex-col justify-center">Edit Profile</div>
-                <div className="border-2 border-gray-500 h-24 w-24 rounded-full ml-auto"></div>
+                <div className="border-2 border-gray-500 h-24 w-24 rounded-full ml-auto">
+                    <img src={image ? URL.createObjectURL(image) : info?.avatar} alt="" />
+                    <input id="fileInput" type="file" style={{ display: 'none' }} onChange={handleFileChange} />
+                    <button onClick={handleFileChoose}>Choose File</button>
+                    <button onClick={handleUpload}>Upload</button>
+                </div>
             </div>
             <div className="flex flex-col gap-2">
                 <label>Full name</label>
                 <input
                     defaultValue={info?.fullname}
                     type="text"
+                    id="fullname"
+                    onChange={(e) => handleChange(e)}
                     placeholder="Full name"
                     className="border-2 border-gray-500 px-3 py-1"
                 />
@@ -70,10 +102,10 @@ const EditProfile = () => {
                         onChange={(e) => handleChange(e)}
                         className="w-24 border-2 border-gray-500 py-1"
                     >
-                        <option value="male" selected={info?.gender === 'male'}>
+                        <option value="Male" selected={info?.gender === 'Male'}>
                             Nam
                         </option>
-                        <option value="female" selected={info?.gender === 'female'}>
+                        <option value="Female" selected={info?.gender === 'Female'}>
                             Nữ
                         </option>
                     </select>
@@ -92,15 +124,16 @@ const EditProfile = () => {
             <div className="flex flex-col gap-2">
                 <label>Address</label>
                 <input
-                    defaultValue={address && address?.address + ',' + address?.city + ',' + address?.province}
-                    disabled
+                    defaultValue={info?.address}
+                    id="address"
                     type="text"
+                    onChange={(e) => handleChange(e)}
                     placeholder="Address"
                     className="border-2 border-gray-500 px-3 py-1"
                 />
             </div>
 
-            <div className="flex gap-5">
+            <div onClick={handleSave} className="flex gap-5">
                 <button type="button" className="border-2 border-teal-400 w-24 h-10 hover:bg-teal-300 hover:text-white">
                     Save
                 </button>

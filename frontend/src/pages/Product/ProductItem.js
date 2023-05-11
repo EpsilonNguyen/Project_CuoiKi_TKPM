@@ -15,6 +15,8 @@ const ProductItem = () => {
     const [numToShow, setNumToShow] = useState(3);
     const [count, setCount] = useState(3);
     const [hotDeal, setHotDeal] = useState();
+    const [min, setMin] = useState(0);
+    const [max, setMax] = useState(2000);
     const [sort, setSort] = useState('name');
 
     const [shoes, setShoes] = useState(['Nike', 'Adidas', 'Vans', 'Balenciaga', 'Converse', 'Puma']);
@@ -68,7 +70,19 @@ const ProductItem = () => {
                         </div>
                         <div className="pl-2">
                             <span>Ranger:</span>
-                            <span className="pr-2 float-right">$13.99 - $25.99</span>
+                            <span className="pr-2 float-right">
+                                ${min} - ${max}
+                            </span>
+                            <input
+                                onChange={(e) => {
+                                    setMax(e.target.value);
+                                }}
+                                type="range"
+                                min="0"
+                                max="2000"
+                                step="2"
+                                className="w-full"
+                            />
                         </div>
                     </div>
 
@@ -99,7 +113,6 @@ const ProductItem = () => {
                     <div className="h-48 border-2 border-red-500">This is picture</div>
 
                     <div className="flex cursor-pointer mt-5 py-2 pl-2 bg-gray-200">
-                        <span className="ml-5">13 Items</span>
                         <span className="ml-12 mr-5">Sort By</span>
                         <div>
                             <select
@@ -110,18 +123,7 @@ const ProductItem = () => {
                                 <option value="price">Price</option>
                             </select>
                         </div>
-                        <span className="ml-24 mr-5">Show</span>
-                        <div>
-                            <select
-                                className="w-24 bg-gray-200 border-2 border-black"
-                                value={count}
-                                onChange={(e) => setCount(e.target.value)}
-                            >
-                                <option value={3}>3</option>
-                                <option value={5}>5</option>
-                                <option value={7}>7</option>
-                            </select>
-                        </div>
+
                         <div className="absolute right-24">
                             <span
                                 onClick={() => {
@@ -136,11 +138,7 @@ const ProductItem = () => {
                         </div>
                     </div>
 
-                    <ListProductItem count={count} sort={sort} />
-
-                    <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200">
-                        <span>1 2 3 4 5</span>
-                    </div>
+                    <ListProductItem sort={sort} max={max} />
                 </div>
             </div>
             <Footer />

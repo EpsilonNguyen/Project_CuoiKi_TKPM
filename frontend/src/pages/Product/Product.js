@@ -9,7 +9,7 @@ const Product = () => {
     const history = useHistory();
     const [count, setCount] = useState(10);
     const [min, setMin] = useState(0);
-    const [max, setMax] = useState(300);
+    const [max, setMax] = useState(2000);
     const [hotDeal, setHotDeal] = useState();
     const handleClickProductItem = () => {
         history.push('/product-items');
@@ -78,7 +78,7 @@ const Product = () => {
                                 }}
                                 type="range"
                                 min="0"
-                                max="300"
+                                max="2000"
                                 step="2"
                                 className="w-full"
                             />
@@ -112,7 +112,6 @@ const Product = () => {
                     <div className="h-48 border-2 border-red-500">This is picture</div>
 
                     <div className="flex cursor-pointer mt-5 py-2 pl-2 bg-gray-200">
-                        <span className="ml-5">13 Items</span>
                         <span className="ml-12 mr-5">Sort By</span>
                         <div>
                             <select
@@ -121,18 +120,6 @@ const Product = () => {
                             >
                                 <option value="name">Name</option>
                                 <option value="price">Price</option>
-                            </select>
-                        </div>
-                        <span className="ml-24 mr-5">Show</span>
-                        <div>
-                            <select
-                                className="w-24 bg-gray-200 border-2 border-black"
-                                value={count}
-                                onChange={(e) => setCount(e.target.value)}
-                            >
-                                <option value={10}>10</option>
-                                <option value={15}>15</option>
-                                <option value={20}>20</option>
                             </select>
                         </div>
                         <div className="absolute right-24">
@@ -150,7 +137,7 @@ const Product = () => {
                         </div>
                     </div>
 
-                    <ListProduct count={count} max={max} sort={sort} />
+                    <ListProduct max={max} sort={sort} />
                 </div>
             </div>
             <Footer />
