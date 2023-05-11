@@ -7,12 +7,12 @@ import { AiFillEye } from 'react-icons/ai';
 
 const Register = () => {
     const history = useHistory();
+    const [rePassword, setRePassword] = useState('');
     const [info, setInfo] = useState({
         email: '',
         fullname: '',
         gender: 'Male',
         password: '',
-        rePassword: '',
     });
 
     const handleChange = (e) => {
@@ -24,21 +24,21 @@ const Register = () => {
 
     async function isExistedUser() {
         try {
-            const { data } = await axios.get(`/user/get-profile?email=${info.email}`);
-            if (data.success) {
-                return true;
-            }
-            return false;
-        } catch (error) { }
-    }
-    async function register() {
-        try {
-            const { data } = await axios.post(`/auth/register`, info);
+            const { data } = await axios.get(`user/get-profile?email=${info.email}`);
             if (data.success === false) {
                 return false;
             }
             return true;
-        } catch (error) { }
+        } catch (error) {}
+    }
+    async function register() {
+        try {
+            const { data } = await axios.post(`auth/register`, info);
+            if (data.success === false) {
+                return false;
+            }
+            return true;
+        } catch (error) {}
     }
 
     const handleRegister = async () => {
@@ -72,11 +72,11 @@ const Register = () => {
         }
     };
     const checkPassword = () => {
-        if (info.password.length < 3 || info.rePassword.length < 3) {
-            toast.error('Mật khẩu ít nhất 3 ký tự');
+        if (info.password.length < 6 || rePassword.length < 6) {
+            toast.error('Mật khẩu ít nhất 6 ký tự');
             return false;
         }
-        if (info.password !== info.rePassword) {
+        if (info.password !== rePassword) {
             toast.error('Mật khẩu không hợp lệ');
             return false;
         }
@@ -88,12 +88,11 @@ const Register = () => {
             info.gender.length === 0 ||
             info.fullname.length === 0 ||
             info.password.length === 0 ||
-            info.rePassword.length === 0
+            rePassword.length === 0
         )
             return true;
         return false;
     };
-    console.log(info);
     return (
         <div className="relative flex">
             <div className="w-[50%] h-full flex justify-center mt-24">
@@ -129,25 +128,31 @@ const Register = () => {
                             onChange={handleChange}
                             placeholder="**********"
                         />
-                        <AiFillEye size={20} className='absolute left-[500px] top-[380px] opacity-50 cursor-pointer hover:opacity-100' />
+                        <AiFillEye
+                            size={20}
+                            className="absolute left-[500px] top-[380px] opacity-50 cursor-pointer hover:opacity-100"
+                        />
                     </div>
                     <div className="flex flex-col">
                         <label className="font-bold">Nhập lại mật khẩu</label>
                         <input
                             id="rePassword"
-                            onChange={handleChange}
+                            onChange={(e) => setRePassword(e.target.value)}
                             className="border-2 border-gray-400 rounded-md mt-2 p-1"
                             type="password"
                             placeholder="**********"
                         />
-                        <AiFillEye size={20} className='absolute left-[500px] top-[472px] opacity-50 cursor-pointer hover:opacity-100' />
+                        <AiFillEye
+                            size={20}
+                            className="absolute left-[500px] top-[472px] opacity-50 cursor-pointer hover:opacity-100"
+                        />
                     </div>
                     <div className="flex px-6">
                         <div>
                             <input
                                 id="gender"
                                 type="checkbox"
-                                value="male"
+                                value="Male"
                                 onChange={handleChecked}
                                 checked={info.gender === 'Male'}
                             />
@@ -157,7 +162,7 @@ const Register = () => {
                             <input
                                 id="gender"
                                 type="checkbox"
-                                value="female"
+                                value="Female"
                                 onChange={handleChecked}
                                 checked={info.gender === 'Female'}
                             />

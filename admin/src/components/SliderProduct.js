@@ -4,14 +4,15 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
 import DeleteButton from './DeleteButton';
 import axios from '../hooks/axios';
+import { toast } from 'react-toastify';
 
 const SliderProduct = () => {
     const [shoe, setShoe] = useState();
-    const [hover, setHover] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [totalSlides, setTotalSlides] = useState();
     const [currentRow, setCurrentRow] = useState(0);
     const [nextRow, setNextRow] = useState(2);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,7 +45,14 @@ const SliderProduct = () => {
             setNextRow(nextRow - 2);
         }
     };
-
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`shoe/delete/${id}`);
+            toast.success('Xóa sản phẩm thành công');
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
     return (
         <CarouselProvider
             naturalSlideWidth={100}
@@ -61,14 +69,18 @@ const SliderProduct = () => {
                                     {items &&
                                         items.map((item) => (
                                             <div className="border-2 w-56">
-                                                {hover === true &&
-                                                    <div className='absolute py-1 px-3 bg-white shadow-md text-xl hover:scale-110 hover:font-bold text-red-500'>
-                                                        <button type="button">
-                                                            Delete
-                                                        </button>
+                                                {item._id === selectedProduct && (
+                                                    <div
+                                                        onClick={() => handleDelete(item._id)}
+                                                        className="absolute py-1 px-3 bg-white shadow-md text-xl hover:scale-110 hover:font-bold text-red-500"
+                                                    >
+                                                        <button type="button">Delete</button>
                                                     </div>
-                                                }
-                                                <img onClick={() => { setHover(!hover) }}
+                                                )}
+                                                <img
+                                                    onClick={() => {
+                                                        setSelectedProduct(item._id);
+                                                    }}
                                                     className="h-48 w-56 border-b-2 hover:border-2 cursor-pointer"
                                                     src={item.images[0]}
                                                     alt="shoe"

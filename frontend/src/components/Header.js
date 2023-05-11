@@ -6,6 +6,7 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 import { FaUser } from 'react-icons/fa';
 import { IoIosCart } from 'react-icons/io';
 import DropdownProfile from './DropdownProfile';
+import { toast } from 'react-toastify';
 
 const Header = () => {
     const history = useHistory();
@@ -37,6 +38,7 @@ const Header = () => {
             history.push('/cart');
         } else history.push('/login');
     };
+
     return (
         <div>
             {isOpenDrop === true && <DropdownProfile />}

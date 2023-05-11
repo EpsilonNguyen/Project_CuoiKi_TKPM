@@ -4,11 +4,11 @@ import axios from '../hooks/axios';
 
 const AddShoe = () => {
     const [image, setImage] = useState(null);
-    const [size, setSize] = useState(0);
+    // const [size, setSize] = useState(0);
     const [data, setData] = useState({
         name: '',
         description: '',
-        brand: '',
+        brand: 'Nike',
         quantity: '',
         price: '',
         sizes: [],
@@ -18,7 +18,6 @@ const AddShoe = () => {
     const handleChange = (e) => {
         setData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
     };
-    console.log(data);
     const handleUpload = (event) => {
         const files = event.target.files; // Lấy danh sách tệp tin đã chọn
         const arr = [];
@@ -29,7 +28,7 @@ const AddShoe = () => {
     };
     const [selectedSizes, setSelectedSizes] = useState([]);
     const handleSizeClick = (sizes) => {
-        setSize(sizes);
+        // setSize(sizes);
         if (selectedSizes.includes(sizes)) {
             const newSelectedSizes = selectedSizes.filter((s) => s !== sizes);
             setSelectedSizes(newSelectedSizes);
@@ -41,7 +40,6 @@ const AddShoe = () => {
             setData({ ...data, sizes: newSelectedSizes });
         }
     };
-    console.log(image);
     const handleSubmit = async () => {
         const formData = new FormData();
         image.forEach((i) => {
@@ -64,6 +62,13 @@ const AddShoe = () => {
         } catch (err) {
             console.log(err.message);
         }
+    };
+    const inputClassName = (size) => {
+        let className = 'rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center';
+        if (selectedSizes.includes(size)) {
+            className = ' rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold';
+        }
+        return className;
     };
     return (
         <div className="flex flex-col gap-3 bg-white px-72">
@@ -141,43 +146,69 @@ const AddShoe = () => {
                 <div className="flex gap-5">
                     <input
                         type="button"
-                        value="32"
-                        onClick={() => handleSizeClick(32)}
-                        className={size === 32 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
-                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
-                        }
-                    />
-                    <input
-                        type="button"
-                        value="33"
-                        onClick={() => handleSizeClick(33)}
-                        className={size === 33 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
-                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
-                        }
-                    />
-                    <input
-                        type="button"
-                        value="34"
-                        onClick={() => handleSizeClick(34)}
-                        className={size === 34 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
-                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
-                        }
-                    />
-                    <input
-                        type="button"
                         value="35"
                         onClick={() => handleSizeClick(35)}
-                        className={size === 35 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
-                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
-                        }
+                        className={inputClassName(35)}
                     />
                     <input
                         type="button"
                         value="36"
                         onClick={() => handleSizeClick(36)}
-                        className={size === 36 ? "rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold"
-                            : "rounded-2xl border-2 border-gray-400 py-2 px-3  w-[80px] text-center"
-                        }
+                        className={inputClassName(36)}
+                    />
+                    <input
+                        type="button"
+                        value="37"
+                        onClick={() => handleSizeClick(37)}
+                        className={inputClassName(37)}
+                    />
+                    <input
+                        type="button"
+                        value="38"
+                        onClick={() => handleSizeClick(38)}
+                        className={inputClassName(38)}
+                    />
+                    <input
+                        type="button"
+                        value="39"
+                        onClick={() => handleSizeClick(39)}
+                        className={inputClassName(39)}
+                    />
+                    <input
+                        type="button"
+                        value="40"
+                        onClick={() => handleSizeClick(40)}
+                        className={inputClassName(40)}
+                    />
+                    <input
+                        type="button"
+                        value="41"
+                        onClick={() => handleSizeClick(41)}
+                        className={inputClassName(41)}
+                    />
+                    <input
+                        type="button"
+                        value="42"
+                        onClick={() => handleSizeClick(42)}
+                        className={inputClassName(42)}
+                    />
+                    <input
+                        type="button"
+                        value="43"
+                        onClick={() => handleSizeClick(43)}
+                        className={inputClassName(43)}
+                    />
+                    <input
+                        type="button"
+                        value="44"
+                        onClick={() => handleSizeClick(44)}
+                        className={inputClassName(44)}
+                    />
+                    <input
+                        type="button"
+                        value="45"
+                        onClick={() => handleSizeClick(45)}
+                        className={inputClassName(45)}
                     />
                 </div>
             </div>

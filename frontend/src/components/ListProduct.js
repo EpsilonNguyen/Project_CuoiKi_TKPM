@@ -3,7 +3,8 @@ import shoe from '../images/shoe.jpg';
 import axios from '../hooks/axios';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
-const ListProduct = ({ count, max, sort }) => {
+
+const ListProduct = ({ max, sort }) => {
     const [paginate, setPaginate] = useState(0);
     const [item, setItem] = useState();
     const [currentMax, setCurrentMax] = useState(null);
@@ -12,6 +13,7 @@ const ListProduct = ({ count, max, sort }) => {
     const [currentRow, setCurrentRow] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [nextRow, setNextRow] = useState(2);
+    console.log(sort);
     useEffect(() => {
         const fetchData = async () => {
             let apiUrl = 'shoe/all/item';
@@ -29,7 +31,7 @@ const ListProduct = ({ count, max, sort }) => {
             setItem(itemData);
         };
         fetchData();
-    }, [currentMax, max]);
+    }, [currentMax, max, sort]);
     console.log(totalPage);
     useEffect(() => {
         if (max !== currentMax) {
@@ -46,8 +48,6 @@ const ListProduct = ({ count, max, sort }) => {
     const productDetail = (id) => {
         history.push(`/product-info/${id}`);
     };
-
-    const maxRows = Math.ceil(count / 5);
     const itemsInRows = item ? splitItems(item, 5) : [];
     const handleMove = (id) => {
         setPaginate(id - 1);
