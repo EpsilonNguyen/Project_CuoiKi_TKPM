@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TbShoe } from 'react-icons/tb';
+import { toast } from 'react-toastify';
 import axios from '../hooks/axios';
 
 const AddShoe = () => {
@@ -53,14 +54,18 @@ const AddShoe = () => {
         data.sizes.forEach((i) => {
             formData.append('sizes', i);
         });
-        try {
-            await axios.post('shoe/new', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-        } catch (err) {
-            console.log(err.message);
+        if (data.price > 0 || data.quantity > 0) {
+            try {
+                await axios.post('shoe/new', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            } catch (err) {
+                console.log(err.message);
+            }
+        } else {
+            toast.error('Vui lòng không nhập giá trị âm');
         }
     };
     const inputClassName = (size) => {
@@ -69,6 +74,11 @@ const AddShoe = () => {
             className = ' rounded-2xl py-2 px-3  w-[80px] text-center bg-teal-400 text-white font-bold';
         }
         return className;
+    };
+    const handleCheck = () => {
+        if (data.price < 0 || data.quantity < 0) {
+            toast.error('Vui lòng không nhập giá trị âm');
+        }
     };
     return (
         <div className="flex flex-col gap-3 bg-white px-72">
@@ -126,6 +136,7 @@ const AddShoe = () => {
                         type="text"
                         placeholder=""
                         id="quantity"
+                        onBlur={handleCheck}
                         onChange={(e) => handleChange(e)}
                         className="rounded-2xl border-2 border-gray-400 py-2 px-3 w-[150px]"
                     />
@@ -136,6 +147,7 @@ const AddShoe = () => {
                         type="text"
                         placeholder=""
                         id="price"
+                        onBlur={handleCheck}
                         onChange={(e) => handleChange(e)}
                         className="rounded-2xl border-2 border-gray-400 py-2 px-3 w-[150px]"
                     />

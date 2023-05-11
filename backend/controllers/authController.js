@@ -8,6 +8,7 @@ import { findUserByEmail, createCart, createUser } from "../designpattern/authRe
 
 export const register = async (req, res, next) => {
     try {
+        console.log("req", req.body);
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
 

@@ -5,6 +5,63 @@ import Checkout from "../models/Checkout.js";
 import Shoe from "../models/Shoe.js";
 import { createError } from "../utils/error.js";
 
+export const totalAllRevenue = async (req, res, next) => {
+    try {
+        const totalRevenue = await Checkout.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$total" }
+                }
+            }
+        ]);
+
+        res.status(200).send({
+            success: true,
+            data: totalRevenue[0].total
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const totalRevenueOnMonth = async (req, res, next) => {
+    try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date();
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const totalRevenue = await Checkout.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: startOfMonth,
+                        $lte: endOfMonth
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$total" }
+                }
+            }
+        ]);
+
+        res.status(200).send({
+            success: true,
+            data: totalRevenue[0].total
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 export const createCheckout = async (req, res, next) => {
     try {
         const userID = req.params.userID;

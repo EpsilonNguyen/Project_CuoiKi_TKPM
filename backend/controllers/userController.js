@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import cloudinary from '../utils/cloudinary.js';
 import Review from '../models/Review.js';
 import Shoe from '../models/Shoe.js';
+import { truncate } from 'fs';
 
 export const getUserByEmail = async (req, res, next) => {
     try {

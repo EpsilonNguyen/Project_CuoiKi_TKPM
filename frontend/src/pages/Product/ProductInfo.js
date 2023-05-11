@@ -18,6 +18,8 @@ const ProductInfo = () => {
     const [num, setNum] = useState(1);
     const [info, setInfo] = useState();
     const [size, setSize] = useState();
+    const [image, setImage] = useState();
+    const [selectedImage, setSelectedImage] = useState();
 
     const handlePluse = () => {
         if (num >= info?.quantity) {
@@ -43,10 +45,11 @@ const ProductInfo = () => {
             const { data } = await axios.get(`shoe/${id}`);
             setInfo(data);
             setSize(data.sizes[0]);
+            setImage(data.images);
+            setSelectedImage(data.images[0]);
         };
         fetchData();
     }, [id]);
-
     const addToCart = async () => {
         if (info?.quantity > 0 && num <= info?.quantity) {
             try {
@@ -65,25 +68,21 @@ const ProductInfo = () => {
             toast.error('Không đủ sản phẩm để đặt hàng');
         }
     };
-    // console.log(info);
+
     return (
         <div className="h-full text-black bg-white">
             <Header />
             <div className="flex gap-8 mb-5">
                 <div className="w-56 ml-12">
                     <div>
-                        <img className="h-48 w-56 shadow-xl" src={info?.images[0]} alt="shoe" />
+                        <img className="h-48 w-56 shadow-xl" src={selectedImage} alt="shoe" />
                     </div>
-                    <div className='flex gap-1 mt-8'>
-                        <div>
-                            <img className="h-24 w-40 border-2" src={info?.images[0]} alt="shoe" />
-                        </div>
-                        <div>
-                            <img className="h-24 w-40 border-2" src={info?.images[0]} alt="shoe" />
-                        </div>
-                        <div>
-                            <img className="h-24 w-40 border-2" src={info?.images[0]} alt="shoe" />
-                        </div>
+                    <div className="flex gap-1 mt-8">
+                        {(image ?? []).map((item) => (
+                            <div onClick={() => setSelectedImage(item)}>
+                                <img className="h-24 w-40 border-2" src={item} alt="shoe" />
+                            </div>
+                        ))}
                     </div>
                 </div>
 
@@ -137,7 +136,11 @@ const ProductInfo = () => {
                                 +
                             </button>
                         </div>
-                        <button id="addToCart" onClick={addToCart} className="bg-blue-200 h-8 w-32 ml-auto hover:font-bold hover:scale-110">
+                        <button
+                            id="addToCart"
+                            onClick={addToCart}
+                            className="bg-blue-200 h-8 w-32 ml-auto hover:font-bold hover:scale-110"
+                        >
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                             <span className="ml-2">Add To Cart</span>
                         </button>
@@ -146,12 +149,12 @@ const ProductInfo = () => {
 
                 <div className="border-2 border-gray-300 w-[750px]">
                     <Tabs>
-                        <TabList className='font-bold'>
+                        <TabList className="font-bold">
                             <Tab>Product Information</Tab>
                             <Tab>Reviews</Tab>
                         </TabList>
 
-                        <TabPanel className='px-3 py-1 border-t-2 border-gray-400'>
+                        <TabPanel className="px-3 py-1 border-t-2 border-gray-400">
                             <h2>{info?.description}</h2>
                         </TabPanel>
                         <TabPanel>

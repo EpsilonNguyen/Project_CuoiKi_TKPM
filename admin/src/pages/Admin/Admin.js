@@ -4,19 +4,38 @@ import { BiLogOutCircle } from 'react-icons/bi';
 import TableUser from '../../components/TableUser';
 import SliderProduct from '../../components/SliderProduct';
 import AddShoe from '../../components/AddShoe';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from '../../hooks/axios';
 
 const Admin = () => {
     const [label, setLabel] = useState('listShoe');
     const history = useHistory();
+    const [revenue, setRevenue] = useState();
+    const [revenueMonth, setRevenueMonth] = useState();
     const { user, dispatch } = useContext(AuthContext);
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
     if (user === null) {
         history.push('/');
     }
-
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data } = await axios.get('checkout/revenue/all');
+            setRevenue(data.data);
+        };
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data } = await axios.get('checkout/revenue/month');
+            setRevenueMonth(data.data);
+        };
+        fetchData();
+    }, []);
+    console.log(revenueMonth);
     const handleLogout = (e) => {
         e.preventDefault();
         dispatch({ type: 'LOGIN_START' });
@@ -32,6 +51,10 @@ const Admin = () => {
         <div className="relative">
             <div className="h-[80px] border-b-2">
                 <div className="font-bold text-teal-300 text-4xl pl-24 pt-3">Shoe Shop</div>
+                <span>Doanh thu : {revenue}</span>
+                <span>
+                    Doanh thu tháng {currentMonth} : {revenueMonth}
+                </span>
             </div>
             <div className="flex h-[680px]">
                 <div className="border-r-2 w-[180px] flex flex-col gap-1 pt-5">

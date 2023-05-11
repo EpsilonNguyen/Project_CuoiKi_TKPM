@@ -19,6 +19,9 @@ router.get('/profile/:id', profileUser);
 
 router.get('/get-profile', getUserByEmail);
 
+// GET PROFILE USER
+router.get('/get-profile', getUserByEmail);
+
 // GET ALL USER
 router.get('/all', getAllUser);
 
