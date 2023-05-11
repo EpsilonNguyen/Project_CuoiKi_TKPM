@@ -156,7 +156,7 @@ const Register = () => {
                                 onChange={handleChecked}
                                 checked={info.gender === 'Male'}
                             />
-                            <label> Nam</label>
+                            <label>Male</label>
                         </div>
                         <div className="ml-auto">
                             <input
@@ -166,7 +166,7 @@ const Register = () => {
                                 onChange={handleChecked}
                                 checked={info.gender === 'Female'}
                             />
-                            <label> Nữ</label>
+                            <label>Female</label>
                         </div>
                     </div>
                     <button
