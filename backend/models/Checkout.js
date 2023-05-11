@@ -21,9 +21,7 @@ const CheckoutSchema = new mongoose.Schema({
         }
     ],
     shipAddress: {
-        address: { type: String, require: true },
-        city: { type: String, require: true },
-        province: { type: String, require: true },
+        type: String
     },
     total: {
         type: Number,
