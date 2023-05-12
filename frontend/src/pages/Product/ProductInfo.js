@@ -73,7 +73,7 @@ const ProductInfo = () => {
     return (
         <div className="h-full text-black bg-white">
             <Header />
-            <div className="flex gap-8 mb-5">
+            <div className="flex gap-8 mb-5 justify-center">
                 <div className="w-56 ml-12">
                     <div>
                         <img className="h-48 w-56 shadow-xl" src={selectedImage} alt="shoe" />
@@ -152,15 +152,15 @@ const ProductInfo = () => {
                     <Tabs>
                         <TabList className="font-bold">
                             <Tab>Product Information</Tab>
-                            <Tab>Reviews</Tab>
+
                         </TabList>
 
                         <TabPanel className="px-3 py-1 border-t-2 border-gray-400">
                             <h2>{info?.description}</h2>
                         </TabPanel>
-                        <TabPanel>
-                            <h2>{info?.reviews}</h2>
-                        </TabPanel>
+
+
+
                     </Tabs>
                 </div>
             </div>

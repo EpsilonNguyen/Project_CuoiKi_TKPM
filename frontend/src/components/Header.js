@@ -20,18 +20,22 @@ const Header = () => {
         } else history.push('/login');
     };
     useEffect(() => {
-        const fetchData = async () => {
-            const { data } = await axios.get(`user/profile/${user._id}`);
-            setInfo(data.data.wallet);
-        };
-        fetchData();
-    }, []);
+        if (user !== null) {
+            const fetchData = async () => {
+                const { data } = await axios.get(`user/profile/${user._id}`);
+                setInfo(data.data.wallet);
+            };
+            fetchData();
+        }
+    }, [])
     useEffect(() => {
-        const fetchData = async () => {
-            const { data } = await axios.get(`cart/get/user/${user._id}`);
-            setCount(data.shoeItem.length);
-        };
-        fetchData();
+        if (user !== null) {
+            const fetchData = async () => {
+                const { data } = await axios.get(`cart/get/user/${user._id}`);
+                setCount(data.shoeItem.length);
+            };
+            fetchData();
+        }
     }, [count]);
     const handleCart = () => {
         if (user !== null) {

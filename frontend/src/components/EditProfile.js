@@ -2,11 +2,16 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import axios from '../hooks/axios';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const EditProfile = () => {
     const [info, setInfo] = useState();
     const { user } = useContext(AuthContext);
     const [image, setImage] = useState(null);
+    const history = useHistory()
+    if (user === null) {
+        history.push('/login')
+    }
 
     useEffect(() => {
         const fetchData = async () => {

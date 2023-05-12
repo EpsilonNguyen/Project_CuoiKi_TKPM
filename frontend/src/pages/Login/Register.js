@@ -29,7 +29,7 @@ const Register = () => {
                 return false;
             }
             return true;
-        } catch (error) {}
+        } catch (error) { }
     }
     async function register() {
         try {
@@ -38,7 +38,7 @@ const Register = () => {
                 return false;
             }
             return true;
-        } catch (error) {}
+        } catch (error) { }
     }
 
     const handleRegister = async () => {
@@ -72,8 +72,8 @@ const Register = () => {
         }
     };
     const checkPassword = () => {
-        if (info.password.length < 6 || rePassword.length < 6) {
-            toast.error('Mật khẩu ít nhất 6 ký tự');
+        if (info.password.length < 3 || rePassword.length < 3) {
+            toast.error('Mật khẩu ít nhất 3 ký tự');
             return false;
         }
         if (info.password !== rePassword) {
@@ -128,10 +128,7 @@ const Register = () => {
                             onChange={handleChange}
                             placeholder="**********"
                         />
-                        <AiFillEye
-                            size={20}
-                            className="absolute left-[500px] top-[380px] opacity-50 cursor-pointer hover:opacity-100"
-                        />
+
                     </div>
                     <div className="flex flex-col">
                         <label className="font-bold">Nhập lại mật khẩu</label>
@@ -142,10 +139,7 @@ const Register = () => {
                             type="password"
                             placeholder="**********"
                         />
-                        <AiFillEye
-                            size={20}
-                            className="absolute left-[500px] top-[472px] opacity-50 cursor-pointer hover:opacity-100"
-                        />
+
                     </div>
                     <div className="flex px-6">
                         <div>

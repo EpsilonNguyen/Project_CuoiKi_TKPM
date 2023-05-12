@@ -58,7 +58,7 @@ const ListProduct = ({ max, sort }) => {
     return (
         <>
             {itemsInRows.slice(currentRow, nextRow).map((items, index) => (
-                <div key={index} className="flex mt-5">
+                <div key={index} className="flex mt-5 gap-3 justify-center">
                     {items &&
                         items.map((item) => (
                             <div key={item._id} className="w-48 mr-12" onClick={() => productDetail(item._id)}>

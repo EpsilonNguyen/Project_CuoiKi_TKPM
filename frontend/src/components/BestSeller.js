@@ -37,7 +37,7 @@ const BestSeller = () => {
             </div>
 
             {itemsInRows.slice(0, maxRows).map((items, index) => (
-                <div key={index} className="flex gap-12 mt-5 pl-12">
+                <div key={index} className="flex gap-12 mt-5 pl-12 justify-center">
                     {items?.map((item) => (
                         <div
                             key={item._id}
@@ -45,7 +45,7 @@ const BestSeller = () => {
                             className="w-48 cursor-pointer"
                         >
                             <img className="h-48 hover:scale-110 hover:shadow-xl" src={item.images[0]} alt="shoe" />
-                            <div className="text-center bg-gray-100 hover:font-bold hover:text-teal-400 py-2">
+                            <div className="text-center bg-gray-100 hover:font-bold hover:text-teal-400 py-2 h-20">
                                 <div>{item.name}</div>
                                 <div> ${item.price}</div>
                             </div>
