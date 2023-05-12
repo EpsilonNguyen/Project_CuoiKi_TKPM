@@ -49,12 +49,14 @@ const Admin = () => {
     };
     return (
         <div className="relative">
-            <div className="h-[80px] border-b-2">
+            <div className="h-[80px] border-b-2 flex gap-2">
                 <div className="font-bold text-teal-300 text-4xl pl-24 pt-3">Shoe Shop</div>
-                <span>Doanh thu : {revenue}</span>
-                <span>
-                    Doanh thu tháng {currentMonth} : {revenueMonth}
-                </span>
+                <div className='flex flex-col pt-4 text-orange-400 text-sm font-bold'>
+                    <span>Doanh thu : {revenue}</span>
+                    <span>
+                        Doanh thu tháng {currentMonth} : {revenueMonth}
+                    </span>
+                </div>
             </div>
             <div className="flex h-[680px]">
                 <div className="border-r-2 w-[180px] flex flex-col gap-1 pt-5">

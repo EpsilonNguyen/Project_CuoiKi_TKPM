@@ -21,7 +21,7 @@ const DropdownProfile = () => {
     };
 
     return (
-        <div className="absolute right-[270px] top-10 shadow-md w-40 bg-white">
+        <div className="absolute right-[240px] top-10 shadow-md w-40 bg-black text-white">
             <div
                 onClick={() => {
                     history.push('/profile');

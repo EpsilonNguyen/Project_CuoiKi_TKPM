@@ -54,11 +54,13 @@ const EditProfile = () => {
         <div className="flex flex-col gap-5">
             <div className="flex mt-8 mb-3">
                 <div className="font-bold text-3xl flex flex-col justify-center">Edit Profile</div>
-                <div className="border-2 border-gray-500 h-24 w-24 rounded-full ml-auto">
-                    <img src={image ? URL.createObjectURL(image) : info?.avatar} alt="" />
+                <div className="h-24 w-24 rounded-full ml-auto">
+                    <img className='h-24 w-24 rounded-full' src={image ? URL.createObjectURL(image) : info?.avatar} alt="" />
                     <input id="fileInput" type="file" style={{ display: 'none' }} onChange={handleFileChange} />
-                    <button onClick={handleFileChoose}>Choose File</button>
-                    <button onClick={handleUpload}>Upload</button>
+                    <div className='flex gap-3 justify-center mt-2'>
+                        <button className='bg-blue-400 text-white cursor-pointer px-2 py-1 hover:scale-110 hover:font-bold' onClick={handleFileChoose}>Choose</button>
+                        <button className='bg-teal-400 text-white cursor-pointer px-2 py-1 hover:scale-110 hover:font-bold' onClick={handleUpload}>Upload</button>
+                    </div>
                 </div>
             </div>
             <div className="flex flex-col gap-2">

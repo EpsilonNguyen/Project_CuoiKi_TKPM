@@ -4,6 +4,7 @@ import ListProduct from '../../components/ListProduct';
 import { useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from '../../hooks/axios';
+import banner from '../../images/banner.jpg';
 
 const Product = () => {
     const history = useHistory();
@@ -109,7 +110,9 @@ const Product = () => {
                 </div>
 
                 <div className="ml-10 mr-20 w-full">
-                    <div className="h-48 border-2 border-red-500">This is picture</div>
+                    <div className="h-48 shadow-md">
+                        <img className='h-48 w-full' alt='banner' src={banner} />
+                    </div>
 
                     <div className="flex cursor-pointer mt-5 py-2 pl-2 bg-gray-200">
                         <span className="ml-12 mr-5">Sort By</span>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi';
-import DeleteButton from './DeleteButton';
 import axios from '../hooks/axios';
 import { toast } from 'react-toastify';
 
