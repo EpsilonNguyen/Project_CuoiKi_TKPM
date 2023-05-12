@@ -6,6 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const ListProductItem = ({ sort, max }) => {
+    const [paginate, setPaginate] = useState(0);
     const { user } = useContext(AuthContext);
     const [item, setItem] = useState();
     const [currentMax, setCurrentMax] = useState(null);
@@ -48,6 +49,7 @@ const ListProductItem = ({ sort, max }) => {
     };
     const itemsInRows = item ? splitItems(item, 5) : [];
     const handleMove = (id) => {
+        setPaginate(id - 1);
         setCurrentPage(id);
         setCurrentRow(id - 1);
         setNextRow(id);
@@ -104,9 +106,16 @@ const ListProductItem = ({ sort, max }) => {
                     </div>
                 ))}
             </div>
-            <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200">
+            <div className="cursor-pointer text-center mt-5 py-2 pl-2 outline-none bg-gray-200 flex gap-1 justify-center">
                 {Array.from({ length: totalPage }).map((_, Index) => (
-                    <span onClick={() => handleMove(Index + 1)}>{Index + 1}</span>
+                    <span
+                        className={
+                            paginate === Index ? 'bg-blue-500 text-white font-bold px-2' : ' hover:bg-gray-400 px-2'
+                        }
+                        onClick={() => handleMove(Index + 1)}
+                    >
+                        {Index + 1}
+                    </span>
                 ))}
             </div>
         </>
