@@ -58,12 +58,15 @@ const Login = () => {
     };
     const handleLogin = async (e) => {
         e.preventDefault();
-        if (checkForm() === false) return;
+        if (checkForm() === false) {
+            return;
+        };
         try {
             const { data } = await axios.post('auth/login', credentials);
             // Cookies.set("userInfo", JSON.stringify(data));
-            if (data?.isLocked) {
-                toast.error('Tài khoản của bạn bị khóa, vui lòng liên hệ với quản trị');
+            console.log(data)
+            if (!data.success) {
+                toast.error(data.message);
                 return;
             }
             dispatch({ type: 'LOGIN_SUCCESS', payload: data });
@@ -97,10 +100,7 @@ const Login = () => {
                             id="password"
                             onChange={(e) => handleChange(e)}
                         />
-                        <AiFillEye
-                            size={20}
-                            className="absolute left-[500px] top-[335px] opacity-50 cursor-pointer hover:opacity-100"
-                        />
+
                     </div>
 
                     <button

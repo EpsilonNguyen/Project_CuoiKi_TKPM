@@ -90,15 +90,15 @@ export const deleteUser = async (req, res, next) => {
     try {
         const userInfo = await User.findById(req.params.id);
 
-        // Xóa Avatar trên Cloud
-        if (
-            userInfo.avatar !==
-            'https://res.cloudinary.com/dtfei3453/image/upload/v1683022384/uploads/avatar_k0ohjl.webp'
-        ) {
-            const publics_id = deleteUser.avatar.split('/').slice(-2).join('/').replace('.jpg', '');
-            const result = await cloudinary.uploader.destroy(publics_id);
-            if (result !== 'ok') return next(createError(404, 'Xóa Hình ảnh trên Cloud thất bại!'));
-        }
+        // // Xóa Avatar trên Cloud
+        // if (
+        //     userInfo.avatar !==
+        //     'https://res.cloudinary.com/dtfei3453/image/upload/v1683022384/uploads/avatar_k0ohjl.webp'
+        // ) {
+        //     const publics_id = deleteUser.avatar.split('/').slice(-2).join('/').replace('.jpg', '');
+        //     const result = await cloudinary.uploader.destroy(publics_id);
+        //     if (result !== 'ok') return next(createError(404, 'Xóa Hình ảnh trên Cloud thất bại!'));
+        // }
 
         // Xoá All Review của User
         const listReviews = await Review.find({ user: req.params.id });

@@ -87,13 +87,26 @@ export const loginAdmin = async (req, res, next) => {
 export const login = async (req, res, next) => {
     try {
         const resultUser = await findUserByEmail(req.body.email);
-        if (!resultUser) return next(createError(404, "User Không Tồn Tại!"));
-
-        const isLocking = resultUser.isLocked;
-        if (isLocking) return next(createError(404, "Tài khoản của bạn đã bị khóa vì một số vấn đề!"));
+        if (!resultUser) {
+            return res.status(201).send({
+                success: false,
+                message: "Người dùng không tồn tại!"
+            });
+        }
 
         const isCorrectPassword = bcrypt.compareSync(req.body.password, resultUser.password);
-        if (!isCorrectPassword) return next(createError(404, "Mật khẩu không chính xác!"));
+        if (!isCorrectPassword) return res.status(201).send({
+            success: false,
+            message: "Sai mật khẩu!"
+        });
+
+        const isLocking = resultUser.isLocked;
+        if (isLocking) {
+            return res.status(201).send({
+                success: false,
+                message: "Tài khoản cuả Người dùng đã bị khóa vì một số vấn đề!"
+            });
+        }
 
         const token = jwt.sign({ id: resultUser._id, isAdmin: resultUser.isAdmin }, process.env.JWT);
 

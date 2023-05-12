@@ -135,7 +135,10 @@ const Cart = () => {
 
                     {cart?.map((item) => (
                         <div key={item?._id} className="flex border-b-2 border-gray-200 py-6">
-                            <span onClick={() => handleDelete(item?.id)}>X</span>
+                            <span className='absolute left-[165px] border-2 hover:scale-110 cursor-pointer bg-white px-2 font-bold'
+                                onClick={() => handleDelete(item?.id)}>
+                                X
+                            </span>
                             <div className="ml-24 flex">
                                 <img className="h-20 w-24" src={item?.image} alt="shoe" />
                                 <span className="m-auto pl-5">{item?.name}</span>

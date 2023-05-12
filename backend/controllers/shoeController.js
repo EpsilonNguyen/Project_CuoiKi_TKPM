@@ -250,6 +250,24 @@ export const createShoe = async (req, res, next) => {
     try {
         // Lấy link ảnh từ Cloudinary (đã upload trc đó)
         req.body.images = req.files.map((file) => file.path);
+
+        const existShoe = await Shoe.findOne({ name: req.body.name })
+        if (existShoe) {
+            const updatedShoe = await Shoe.findByIdAndUpdate(
+                existShoe._id,
+                {
+                    description: req.body.description,
+                    brand: req.body.brand,
+                    price: req.body.price,
+                    $inc: { quantity: req.body.quantity },
+                    sizes: req.body.sizes,
+                    images: req.body.images
+                },
+                { new: true }
+            )
+            return res.status(200).json(updatedShoe);
+        }
+
         const newShoe = new Shoe(req.body);
 
         const saveShoe = await newShoe.save();

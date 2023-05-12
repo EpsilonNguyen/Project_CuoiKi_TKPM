@@ -15,6 +15,7 @@ const DropdownProfile = () => {
         try {
             dispatch({ type: 'LOGOUT' });
             toast.success('Đăng xuất thành công');
+            history.push('/login')
         } catch (err) {
             dispatch({ type: 'LOGIN_FAILURE', payload: err.response.data });
         }
