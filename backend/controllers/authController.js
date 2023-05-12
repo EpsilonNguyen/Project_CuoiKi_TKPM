@@ -122,7 +122,10 @@ export const login = async (req, res, next) => {
 
         res.cookie("access_token", token, {
             httpOnly: true
-        }).status(200).send({ birthDay, ...otherDetails });
+        }).status(200).send({
+            success: true,
+            user: { birthDay, ...otherDetails }
+        });
     } catch (err) {
         next(err);
     }

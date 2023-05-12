@@ -19,7 +19,7 @@ const EditProfile = () => {
             setInfo(data.data);
         };
         fetchData();
-    }, [user._id]);
+    }, []);
     const handleChange = (e) => {
         setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
     };

@@ -65,10 +65,11 @@ const Login = () => {
             const { data } = await axios.post('auth/login', credentials);
             // Cookies.set("userInfo", JSON.stringify(data));
             console.log(data)
-            if (!data.success) {
+            if (data.success === false) {
                 toast.error(data.message);
                 return;
             }
+            console.log(data);
             dispatch({ type: 'LOGIN_SUCCESS', payload: data });
             history.push('/');
         } catch (err) {
